@@ -48,7 +48,7 @@ class APIFeatures {
     return this;
   }
 
-   pagination() {
+  pagination() {
     const pageVal = this.queryString.page * 1 || 1;
     const limitVal = this.queryString.limit * 1 || 100;
     // console.log("->>->>->>",pageVal , limitVal)
@@ -57,5 +57,25 @@ class APIFeatures {
     this.query = this.query.skip(skipVal).limit(limitVal);
     return this;
   }
+
+  numberToMonth(number) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    return months[number - 1];
+  }
 }
-module.exports = APIFeatures ;
+
+module.exports = APIFeatures;
