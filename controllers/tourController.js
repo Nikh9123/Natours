@@ -153,7 +153,7 @@ exports.updateTour = async (req, res) => {
     console.log('error 🔥🔥🔥', err);
     res.status(400).json({
       status: 'fail',
-      message: 'Invalid Data',
+      message: err,
     });
   }
 };
@@ -161,7 +161,9 @@ exports.deleteTour = async (req, res) => {
   try {
     const Id = req.params.id;
     await Tour.deleteOne({ _id: Id });
-    res.status(204);
+    res.status(204).json({
+      status: 'success',
+    });
   } catch (err) {
     console.log('error 🔥🔥🔥', err);
     res.status(404);
