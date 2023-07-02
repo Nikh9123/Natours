@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 
 //todo :<5> USERS ROUTE
 
-//Mounting
+//todo: <6> MOUNTING
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 
