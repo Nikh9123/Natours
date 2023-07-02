@@ -5,6 +5,9 @@ const fs = require('fs');
 const userRouter = require(`./routes/userRoutes`);
 const tourRouter = require('./routes/tourRoutes');
 
+const globalErrorHandler = require('./controllers/errorController');
+const AppError = require('./utils/appError');
+
 const app = express();
 
 //todo: <1> MIDDLEWARES
@@ -31,30 +34,21 @@ app.use((req, res, next) => {
 //Mounting
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
-app.all('*', (req, res, next) => {
-  // res.status(404).json({
-  //   status: 'fail',
-  //   message:`No such ${req.originalUrl} route exists`,
-  // });
-  const err = new Error(
-    `No such ${req.originalUrl} route exists on this server`
-  );
-  err.statusCode = 404;
-  err.status = `fail`;
 
-  next(err);
+app.all('*', (req, res, next) => {
+  // const err = new Error(
+  //   `No such ${req.originalUrl} route exists on this server`
+  // );
+  // err.statusCode = 404;
+  // err.status = `fail`;
+
+  next(
+    new AppError(`No such ${req.originalUrl} route exists on this server`, 404)
+  );
 });
 
 //^ global error handling
-app.use((err, req, res, next) => {
-  // console.log("😍😍😍😍",err.stack);
-  err.statusCode = err.statusCode || 500; //500 means internal server error
-  err.status = err.status || 'error';
+app.use(globalErrorHandler.errorController);
 
-  res.status(err.statusCode).json({
-    status : err.status ,
-    message: err.message 
-  });
-});
 //todo: <6> START SERVER
 module.exports = app;
