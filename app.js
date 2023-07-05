@@ -1,6 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const fs = require('fs');
 
 const userRouter = require(`./routes/userRoutes`);
 const tourRouter = require('./routes/tourRoutes');
