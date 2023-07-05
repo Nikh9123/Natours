@@ -5,11 +5,27 @@ const handleCastErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-const handleDuplicateFieldsDB = (err)=>{
-  const value = err.keyValue.name ;
-  const message = `Creating duplicate fields with name ${value}, please use another value`
-  return new AppError(message,400)
+const handleDuplicateFieldsDB = (err) => {
+  const value = err.keyValue.name;
+  const message = `Creating duplicate fields with name "${value}", please use another value`;
+  return new AppError(message, 400);
+};
+
+const handleValidationErrorDB = ( msg) =>
+{ 
+  const message = msg.concat(' ',',', 'please provide all required fields')
+  return new AppError(message ,400);
+
 }
+
+// const handleValidationErrorDB = (err) =>
+// { 
+//   const errors = Object.values(err.errors).map(el => el.message ) ;
+
+//   const message = `Invalid data inputs. ${errors.join('. ')}`
+//   return new AppError(message ,400);
+
+// }
 
 const sendErrorProd = (err, res) => {
   //TRUSTED OPERATIONAL ERROR : SEND MSG TO CLIENT
@@ -46,20 +62,18 @@ exports.errorController = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500; //500 means internal server error
   err.status = err.status || 'error';
 
-  // console.log("❌❌❌❌",err.code)
   // const error = {...err} ;
   // console.log("❌❌❌❌",error.name)
-
-  if(process.env.NODE_ENV === 'development')
-  {
-    sendErrorDev(err,res);
-  }
-  else if(process.env.NODE_ENV === 'production')
-  {
-    let error = { ...err } ;
-    if(err.name === 'CastError') error = handleCastErrorDB(error);
-    if(err.code === 11000) error = handleDuplicateFieldsDB(error);
-
-    sendErrorProd(error ,res);
+  
+  if (process.env.NODE_ENV === 'development') {
+    sendErrorDev(err, res);
+  } else if (process.env.NODE_ENV === 'production') {
+    let error = { ...err };
+    if (err.name === 'CastError') error = handleCastErrorDB(error);
+    if (err.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (err.name === 'ValidationError') error = handleValidationErrorDB(err.message);
+    // if (err.name === 'ValidationError') error = handleValidationErrorDB(error);
+    
+    sendErrorProd(error, res);
   }
 };
