@@ -6,13 +6,16 @@
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production&&nodemon server.js",
-    "debug":"ndb server.js"
+    "debug": "ndb server.js"
   },
   "author": "Nikhil Satyam",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
+    "js": "^0.1.0",
+    "jsonwebtoken": "^9.0.1",
     "mongoose": "^5.13.17",
     "morgan": "^1.10.0",
     "slugify": "^1.6.6",

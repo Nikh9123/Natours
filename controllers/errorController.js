@@ -6,8 +6,9 @@ const handleCastErrorDB = (err) => {
 };
 
 const handleDuplicateFieldsDB = (err) => {
-  const value = err.keyValue.name;
-  const message = `Creating duplicate fields with name "${value}", please use another value`;
+  const value = JSON.stringify(err.keyValue);
+  // const value = err.mesaage.match(/(["'])(\\?.)*?\1/)[0];
+  const message = `Creating duplicate fields with name ${value}, please use another value`;
   return new AppError(message, 400);
 };
 
@@ -58,17 +59,18 @@ const sendErrorDev = (err, res) => {
 };
 
 exports.errorController = (err, req, res, next) => {
-  // console.log("😍😍😍😍",err.stack);
   err.statusCode = err.statusCode || 500; //500 means internal server error
   err.status = err.status || 'error';
-
+  
+  // console.log("😍😍😍😍",err);
   // const error = {...err} ;
   // console.log("❌❌❌❌",error.name)
   
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = { ...err };
+    let error = {...err} ;
+    // console.log(error)
     if (err.name === 'CastError') error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateFieldsDB(error);
     if (err.name === 'ValidationError') error = handleValidationErrorDB(err.message);
