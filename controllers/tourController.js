@@ -2,6 +2,7 @@ const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 
 // const tourFileContent = JSON.parse(
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
@@ -14,7 +15,7 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res , next) => {
+exports.getAllTours = catchAsync(async (req, res, next) => {
   // try {
   //   console.log(req.query);
 
@@ -106,7 +107,12 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // const tour = await Tour.findOne({
   //   _id: Id,
   // });
-  const tour = await Tour.findById(Id);
+  const tour = await Tour.findById(Id).populate('reviews');
+
+  // const tour = await Tour.findById(Id).populate({
+  //   path: 'guides',
+  //   select: '-__v -passwordChangedAt',
+  // });
 
   if (!tour) {
     return next(new AppError('no tour found with that id', 404));
@@ -124,19 +130,19 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // }
 });
 
-exports.createTour = catchAsync(
-  async (req, res, next) => {
-    // const newTour = new Tour({});
-    // newTour.save()
+// exports.createTour = catchAsync(
+//   async (req, res, next) => {
+//     // const newTour = new Tour({});
+//     // newTour.save()
 
-    const newTour = await Tour.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      data: {
-        tour: newTour,
-      },
-    });
-  }
+//     const newTour = await Tour.create(req.body);
+//     res.status(201).json({
+//       status: 'success',
+//       data: {
+//         tour: newTour,
+//       },
+//     });
+//   }
 
   // try {
 
@@ -148,53 +154,59 @@ exports.createTour = catchAsync(
   //   });
   // }
   // };
-);
-exports.updateTour = catchAsync(async (req, res , next) => {
-  // try {
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+// );
 
-  if (!tour) {
-    return next(new AppError('no tour found with that id', 404));
-  }
+// exports.updateTour = catchAsync(async (req, res, next) => {
+//   // try {
+//   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-  // } catch (err) {
-  //   console.log('error 🔥🔥🔥', err);
-  //   res.status(400).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-  // }
-});
+//   if (!tour) {
+//     return next(new AppError('no tour found with that id', 404));
+//   }
 
-exports.deleteTour = catchAsync(async (req, res , next) => {
-  // try {
-  const Id = req.params.id;
-  const tour = await Tour.deleteOne({ _id: Id });
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       tour,
+//     },
+//   });
+// } catch (err) {
+//   console.log('error 🔥🔥🔥', err);
+//   res.status(400).json({
+//     status: 'fail',
+//     message: err,
+//   });
+// }
+// });
 
-  if (!tour) {
-    return next(new AppError('no tour found with that id', 404));
-  }
+//* USING FACTORY FUNCTIONS
+exports.createTour = factory.createOne(Tour);
+exports.updateTour = factory.updateOne(Tour);
+exports.deleteTour = factory.deleteOne(Tour);
 
-  res.status(204).json({
-    status: 'success',
-  });
-  // } catch (err) {
-  //   console.log('error 🔥🔥🔥', err);
-  //   res.status(404);
-  // }
-});
+// exports.deleteTour = catchAsync(async (req, res, next) => {
+//   // try {
+//   const Id = req.params.id;
+//   const tour = await Tour.deleteOne( {_id : Id} );
+//  console.log(tour.deletedCount)
+//   if (!tour) {
+//     return next(new AppError('no tour found with that id', 404));
+//   }
+
+//   res.status(204).json({
+//     status: 'success',
+//   });
+//   // } catch (err) {
+//   //   console.log('error 🔥🔥🔥', err);
+//   //   res.status(404);
+//   // }
+// });
 
 //*AGGREGATION
-exports.getTourStats = catchAsync(async (req, res,next) => {
+exports.getTourStats = catchAsync(async (req, res, next) => {
   // try {
   const stats = await Tour.aggregate([
     {
@@ -227,7 +239,7 @@ exports.getTourStats = catchAsync(async (req, res,next) => {
   // }
 });
 
-exports.getMonthlyPlan = catchAsync(async (req, res , next) => {
+exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   // try {
   const year = req.params.year * 1; //2021
   // $match : { "date": { $gte: new ISODate("2014-01-01"), $lt: new ISODate("2015-01-01") } }

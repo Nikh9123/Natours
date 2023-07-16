@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const validator = require('validator');
+// const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const tourSchema = new mongoose.Schema(
       unique: true,
       maxLength: [40, 'A tour name must have less or equal then 40 chars'],
       minLength: [5, 'A tour name must have more or equal then 5 chars'],
-      // validate:[ validator.isAlphanumeric , 'tour name only contains alpha numeric value'] 
+      // validate:[ validator.isAlphanumeric , 'tour name only contains alpha numeric value']
     },
     slug: String,
     duration: {
@@ -24,7 +24,10 @@ const tourSchema = new mongoose.Schema(
     },
     difficulty: {
       type: String,
-      required: [true, 'A tour must have difficulty level from easy , medium , hard'],
+      required: [
+        true,
+        'A tour must have difficulty level from easy , medium , hard',
+      ],
       enum: {
         values: ['easy', 'medium', 'hard'],
         message: 'the difficulty should be choosen from easy , medium , hard',
@@ -51,10 +54,11 @@ const tourSchema = new mongoose.Schema(
           const value = val.replace('%', '') * 1;
           //this points to current doc
           const discountMoney = (value * this.price) / 100;
-          console.log(" 🌋🌋🌋🌋",discountMoney)
+          console.log(' 🌋🌋🌋🌋', discountMoney);
           return discountMoney <= this.price;
         },
-        message:"the discount value ({VALUE}) should be less than regular price"
+        message:
+          'the discount value ({VALUE}) should be less than regular price',
       },
     },
     summary: {
@@ -81,6 +85,36 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      //GEOLOCATION
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -88,9 +122,19 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+//*virtual fields
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
+
+//* VIRTUAL POPULATE 
+tourSchema.virtual('reviews', {
+  ref:'Review' ,
+  foreignField:'tour',
+
+  localField:'_id'
+})
+
 
 //* DOCUMENT MIDDLEWARE RUNS BEFORE .save() and .create()
 tourSchema.pre('save', function (next) {
@@ -98,10 +142,17 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
+// tourSchema.pre('save', async function (next) {
+//   const guidesPromise = this.guides.map(async (id) => await User.findById(id));
+
+//   this.guides = await Promise.all(guidesPromise);
+
+//   next();
+// });
 // tourSchema.pre('save',
 // function (next){
 // console.log('will save the document');
-// // next();
+// next();
 
 // })
 
@@ -111,6 +162,7 @@ tourSchema.pre('save', function (next) {
 // });
 
 //* QUERY MIDDLEWARE RUNS BEFORE .find() etc
+
 tourSchema.pre(/^find/, function (next) {
   // tourSchema.pre('find', function (next) {
   this.find({ secretTour: { $ne: true } });
@@ -118,6 +170,16 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides' ,
+    select: '-__v -passwordChangedAt',
+  })
+  next();
+});
+
+
+//* QUERY MIDDLEWARE RUNS BEFORE AND POST .find() etc
 tourSchema.post(/^find/, function (docs, next) {
   console.log('Query took ', Date.now() - this.start, 'ms');
   next();

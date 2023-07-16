@@ -3,10 +3,15 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'please provide your name !'],
+    match: [
+      new RegExp(/^[a-zA-Z\s]+$/),
+      '{VALUE} is not valid. Please use only letters'
+    ],
     maxLength: [20, 'A user name must not be greater than 20 characters'],
     minLength: [5, 'A user name must have more or equal then 5 chars'],
   },
@@ -33,6 +38,7 @@ const userSchema = new mongoose.Schema({
   },
   passwordConfirm: {
     type: String,
+    trim:true,
     required: [true, 'Please confirm your password'],
     validate: {
       validator: function (el) {
@@ -44,6 +50,11 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  active :{
+    type:Boolean ,
+    default: true,
+    select : false,
+  }
 });
 
 
@@ -67,6 +78,11 @@ userSchema.pre('save', function (next) {
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
+
+userSchema.pre(/^find/, function(next){
+  this.find({active:{$ne:false}})
+  next();
+})
 
 userSchema.methods.correctPassword = async function (
   candidatePassword,

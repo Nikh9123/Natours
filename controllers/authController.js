@@ -11,8 +11,38 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
+const createSendToken = (user, statusCode, res ) => {
+
+  const token = signToken(user._id);
+  console.log(user)
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+  // if (clearCookie) {
+  //   cookieOptions.expires = new Date(Date.now() - 1); // Expire the cookie immediately
+  // }
+
+  res.cookie('jwt', token, cookieOptions);
+
+  if(process.env.NODE_ENV === 'production')
+  {
+    cookieOptions.secure = true ;
+  }
+  user.password = undefined ;
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.signUp = catchAsync(async (req, res, next) => {
-  const user = await User.create({
+  const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
@@ -20,16 +50,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role,
   });
-
-  const token = signToken(user._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });
+  createSendToken(newUser, 201, res);
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
@@ -42,19 +63,17 @@ exports.logIn = catchAsync(async (req, res, next) => {
 
   // 2) CHECK IF USER EXISTS
   const user = await User.findOne({ email }).select('+password');
-  // console.log(user);
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('incorrect email or password', 401));
   }
-  // 3) IF EVERYTHING OK, SEND BACK TO CLIENT
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-    user: { user },
-  });
+  // 3) send tken
+  createSendToken(user, 200, res);
 });
+
+exports.logOut = catchAsync( async(req,res,next)=>{
+  // createSendToken(req.user, 200, res, true);
+})
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) GETTING TOKEN AND CHECK IF IT'S THERE
@@ -173,10 +192,24 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 3) updte changedPasswordAt property for the user
   await user.save();
 
-  // 4) log the user in  , send JWT
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(null, 200, res);
+});
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  // 1) get user from collection
+  const user = await User.findById(req.user.id).select('+password');
+
+  // 2) check if POSTed current password is correct
+  if (!(await user.correctPassword(req.body.oldPassword, user.password))) {
+    return next(new AppError('Your old password is wrong...', 401));
+  }
+
+  console.log('hello');
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  // User.findByIdAndUpdate() will not work here because we ahve to validate using save function
+
+  // 3) log user in , send JWT
+  createSendToken(user, 200, res);
 });

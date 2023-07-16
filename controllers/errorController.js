@@ -12,15 +12,13 @@ const handleDuplicateFieldsDB = (err) => {
   return new AppError(message, 400);
 };
 
-const handleValidationErrorDB = ( msg) =>
-{ 
-  const message = msg.concat(' ',',', 'please provide all required fields')
-  return new AppError(message ,400);
-
-}
+const handleValidationErrorDB = (msg) => {
+  const message = msg.concat(' ', ',', 'please provide all required fields');
+  return new AppError(message, 400);
+};
 
 // const handleValidationErrorDB = (err) =>
-// { 
+// {
 //   const errors = Object.values(err.errors).map(el => el.message ) ;
 
 //   const message = `Invalid data inputs. ${errors.join('. ')}`
@@ -49,10 +47,12 @@ const sendErrorProd = (err, res) => {
   }
 };
 
-
-const handleJWTError = () => new AppError('Invalid token. Please log in again', 401)
-const handleJWTExpiredError = () => new AppError('session expired ! please log in again ', 401)
-
+const handleJWTError = () =>
+  new AppError('Invalid token. Please log in again', 401);
+const handleJWTExpiredError = () =>
+  new AppError('session expired ! please log in again ', 401);
+const handlePasswordConfirmError = () =>
+  new AppError('password and confirm password should be same ' , 400);
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -65,24 +65,25 @@ const sendErrorDev = (err, res) => {
 exports.errorController = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500; //500 means internal server error
   err.status = err.status || 'error';
-  
+
   // console.log("😍😍😍😍",err);
   // const error = {...err} ;
   // console.log("❌❌❌❌",error.name)
-  
+
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = {...err} ;
+    let error = { ...err };
     // console.log(error)
     if (err.name === 'CastError') error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateFieldsDB(error);
-    if (err.name === 'ValidationError') error = handleValidationErrorDB(err.message);
-    if(err.name === 'JsonWebTokenError') error = handleJWTError()
-    if(err.name === 'TokenExpiredError') error = handleJWTExpiredError()
-    
+    if (err.name === 'ValidationError')
+      error = handleValidationErrorDB(err.message);
+    if (err.name === 'JsonWebTokenError') error = handleJWTError();
+    if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
+    if (err.message === 'jwt malformed') error = handlePasswordConfirmError();
     // if (err.name === 'ValidationError') error = handleValidationErrorDB(error);
-    
+
     sendErrorProd(error, res);
   }
 };
