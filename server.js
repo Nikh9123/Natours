@@ -10,6 +10,9 @@ process.on('uncaughtException', (err) => {
 dotenv.config({ path: './config.env' });
 const app = require('./app');
 
+// const dbPassword = encodeURIComponent(process.env.DATABASE_PASSWORD);
+// const db = process.env.DATABASE.replace('<PASSWORD>', dbPassword);
+
 const db = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
@@ -18,7 +21,7 @@ const db = process.env.DATABASE.replace(
 mongoose
   .connect(db, {
     useCreateIndex: true,
-    useNewUrlParser: true,
+    useNewUrlParser: true, 
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
@@ -29,7 +32,7 @@ mongoose
 const port = process.env.port || 3000;
 
 const server = app.listen(port, () => {
-  console.log(`app running on prt no ${port}...`);
+  console.log(`app running on port no ${port}...`);
 });
 
 process.on('unhandledRejection', (err) => {

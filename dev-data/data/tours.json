@@ -466,5 +466,288 @@
         "day": 5
       }
     ]
+  },
+  {
+    "_id": "5c88fa8cf4afda39709c2981",
+    "name": "The Spiritual Retreat",
+    "summary": "Embark on a transformative journey to sacred sites and ancient spiritual traditions",
+    "description": "Embark on a soul-stirring retreat to explore the spiritual essence of India. Visit renowned pilgrimage destinations such as Varanasi, Rishikesh, and Dharamshala. Witness ancient rituals on the banks of the holy Ganges River, practice yoga and meditation in the foothills of the Himalayas, and immerse yourself in the teachings of revered spiritual masters. This transformative journey will provide deep insights into India's rich spiritual heritage and offer a path to self-discovery and inner peace.",
+    "startLocation": {
+      "description": "Varanasi, India",
+      "type": "Point",
+      "coordinates": [82.9597, 25.3176],
+      "address": "Varanasi, Uttar Pradesh, India"
+    },
+    "ratingsAverage": 4.8,
+    "ratingsQuantity": 9,
+    "images": [
+      "tour-india-4-1.jpg",
+      "tour-india-4-2.jpg",
+      "tour-india-4-3.jpg"
+    ],
+    "startDates": [
+      "2022-05-05T09:00:00.000Z",
+      "2022-09-25T09:00:00.000Z",
+      "2023-02-12T09:00:00.000Z"
+    ],
+    "duration": 12,
+    "maxGroupSize": 12,
+    "difficulty": "medium",
+    "guides": ["5c8a21d02f8fb814b56fa189", "5c8a1f4e2f8fb814b56fa185"],
+    "price": 1799,
+    "imageCover": "tour-india-4-cover.jpg",
+    "locations": [
+      {
+        "_id": "5c88fa8cf4afda39709c2982",
+        "description": "Ganges River, Varanasi",
+        "type": "Point",
+        "coordinates": [83.0084, 25.3176],
+        "day": 1
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2983",
+        "description": "Parmarth Niketan Ashram, Rishikesh",
+        "type": "Point",
+        "coordinates": [78.2676, 30.1044],
+        "day": 4
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2984",
+        "description": "Namgyal Monastery, Dharamshala",
+        "type": "Point",
+        "coordinates": [76.3174, 32.2282],
+        "day": 9
+      }
+    ]
+  },
+  {
+    "_id": "5c88fa8cf4afda39709c2985",
+    "name": "Discover Ram Setu: The Bridge of Ramayan",
+    "summary": "Embark on a captivating journey to explore the ancient bridge of love - Ram Setu",
+    "description": "Join us on a remarkable expedition to uncover the secrets of Ram Setu, an ancient bridge steeped in Ramayana and history. According to legend, this bridge was built by Lord Rama and his army of vanaras (monkey warriors) to reach the island of Lanka in their quest to rescue Lord Rama's wife, Sita. Explore the scenic beauty of Rameswaram, a holy town and the starting point of your adventure. Sail across the mystical waters of the Palk Strait to reach the mysterious Adam's Bridge. Marvel at the architectural marvel and ponder over the tales that surround this fascinating engineering wonder.",
+    "startLocation": {
+      "description": "Rameswaram, Tamil Nadu, India",
+      "type": "Point",
+      "coordinates": [79.3129, 9.2876],
+      "address": "Rameswaram, Tamil Nadu, India"
+    },
+    "ratingsAverage": 4.6,
+    "ratingsQuantity": 12,
+    "images": [
+      "tour-ram-setu-1.jpg",
+      "tour-ram-setu-2.jpg",
+      "tour-ram-setu-3.jpg"
+    ],
+    "startDates": [
+      "2022-07-20T09:00:00.000Z",
+      "2022-10-15T09:00:00.000Z",
+      "2023-03-05T09:00:00.000Z"
+    ],
+    "duration": 5,
+    "maxGroupSize": 10,
+    "difficulty": "medium",
+    "guides": ["5c8a21d02f8fb814b56fa189", "5c8a1f4e2f8fb814b56fa185"],
+    "price": 699,
+    "imageCover": "tour-ram-setu-cover.jpg",
+    "locations": [
+      {
+        "_id": "5c88fa8cf4afda39709c2986",
+        "description": "Ramanathaswamy Temple, Rameswaram",
+        "type": "Point",
+        "coordinates": [79.3129, 9.2876],
+        "day": 1
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2987",
+        "description": "Dhanushkodi Beach, Rameswaram",
+        "type": "Point",
+        "coordinates": [79.3861, 9.1674],
+        "day": 2
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2988",
+        "description": "Adam's Bridge, Palk Strait",
+        "type": "Point",
+        "coordinates": [79.4502, 9.1674],
+        "day": 3
+      }
+    ]
+  },
+  {
+    "_id": "5c88fa8cf4afda39709c2989",
+    "name": "Sacred Journey to Kedarnath Dham",
+    "summary": "Embark on a spiritual pilgrimage to the revered Kedarnath Dham",
+    "description": "Experience the divine aura of Kedarnath Dham, one of the holiest Hindu pilgrimage sites nestled amidst the majestic Himalayas. Join us on this sacred journey as we embark on a spiritual quest to seek blessings at the ancient Kedarnath Temple, dedicated to Lord Shiva. Trek through picturesque trails, immersing yourself in the serene beauty of the surrounding mountains and valleys. Engage in soul-stirring prayers and rituals, and witness the enchanting Aarti ceremony. Allow the tranquility of this mystical place to awaken your spirit and leave an indelible mark on your heart.",
+    "startLocation": {
+      "description": "Gaurikund, Uttarakhand, India",
+      "type": "Point",
+      "coordinates": [79.0637, 30.7321],
+      "address": "Gaurikund, Uttarakhand, India"
+    },
+    "ratingsAverage": 4.9,
+    "ratingsQuantity": 15,
+    "images": [
+      "tour-kedarnath-1.jpg",
+      "tour-kedarnath-2.jpg",
+      "tour-kedarnath-3.jpg"
+    ],
+    "startDates": [
+      "2022-06-10T09:00:00.000Z",
+      "2022-08-20T09:00:00.000Z",
+      "2023-05-05T09:00:00.000Z"
+    ],
+    "duration": 7,
+    "maxGroupSize": 12,
+    "difficulty": "hard",
+    "guides": ["5c8a21d02f8fb814b56fa189", "5c8a23412f8fb814b56fa18c"],
+    "price": 999,
+    "imageCover": "tour-kedarnath-cover.jpg",
+    "locations": [
+      {
+        "_id": "5c88fa8cf4afda39709c298a",
+        "description": "Kedarnath Temple",
+        "type": "Point",
+        "coordinates": [79.0661, 30.7352],
+        "day": 1
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c298b",
+        "description": "Vasuki Tal",
+        "type": "Point",
+        "coordinates": [79.0653, 30.8076],
+        "day": 3
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c298c",
+        "description": "Chorabari Tal",
+        "type": "Point",
+        "coordinates": [79.0821, 30.7537],
+        "day": 5
+      }
+    ]
+  },
+  {
+    "_id": "5c88fa8cf4afda39709c298d",
+    "name": "Wilderness Adventure in Indian Forests",
+    "summary": "Embark on an exhilarating journey through the untamed beauty of Indian forests",
+    "description": "Immerse yourself in the raw and untamed beauty of Indian forests as you embark on a thrilling wilderness adventure. Discover the incredible biodiversity and captivating wildlife that call these forests home. Trek through lush greenery, traverse rugged terrains, and camp under a star-studded sky. Experience close encounters with majestic tigers, playful elephants, graceful deer, and a myriad of colorful birds. Learn about conservation efforts and the importance of preserving these fragile ecosystems. Let the enchanting sights, sounds, and scents of the Indian forests awaken your sense of wonder and leave you with unforgettable memories.",
+    "startLocation": {
+      "description": "Bandipur National Park, Karnataka, India",
+      "type": "Point",
+      "coordinates": [76.5715, 11.7],
+      "address": "Bandipur National Park, Karnataka, India"
+    },
+    "ratingsAverage": 4.7,
+    "ratingsQuantity": 10,
+    "images": [
+      "tour-forests-1.jpg",
+      "tour-forests-2.jpg",
+      "tour-forests-3.jpg"
+    ],
+    "startDates": [
+      "2022-09-15T09:00:00.000Z",
+      "2023-02-10T09:00:00.000Z",
+      "2023-07-01T09:00:00.000Z"
+    ],
+    "duration": 8,
+    "maxGroupSize": 16,
+    "difficulty": "medium",
+    "guides": ["5c8a22c62f8fb814b56fa18b", "5c8a201e2f8fb814b56fa186"],
+    "price": 1499,
+    "imageCover": "tour-forests-cover.jpg",
+    "locations": [
+      {
+        "_id": "5c88fa8cf4afda39709c298e",
+        "description": "Jim Corbett National Park",
+        "type": "Point",
+        "coordinates": [79.0986, 29.5248],
+        "day": 1
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c298f",
+        "description": "Sundarbans National Park",
+        "type": "Point",
+        "coordinates": [88.9218, 21.9497],
+        "day": 3
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2990",
+        "description": "Periyar National Park",
+        "type": "Point",
+        "coordinates": [77.0595, 9.5576],
+        "day": 5
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2991",
+        "description": "Bandhavgarh National Park",
+        "type": "Point",
+        "coordinates": [80.7997, 23.7335],
+        "day": 7
+      }
+    ]
+  },
+  {
+    "_id": "5c88fa8cf4afda39709c2992",
+    "name": "River Expedition through Majestic Indian Rivers",
+    "summary": "Embark on an extraordinary expedition along the majestic rivers of India",
+    "description": "Embark on a captivating journey as you navigate through the meandering paths of the majestic rivers of India. Witness the stunning landscapes, rich cultural heritage, and diverse wildlife that thrive along these waterways. Cruise through the mighty Ganges, experience the tranquil backwaters of Kerala, and marvel at the awe-inspiring beauty of the Brahmaputra. Immerse yourself in the local traditions, indulge in delicious regional cuisines, and visit ancient temples and historical sites that line the riverbanks. Whether you're seeking adventure, serenity, or a deeper connection with nature, this river expedition promises an unforgettable experience of India's enchanting waterways.",
+    "startLocation": {
+      "description": "Varanasi, Uttar Pradesh, India",
+      "type": "Point",
+      "coordinates": [83.0024, 25.3176],
+      "address": "Varanasi, Uttar Pradesh, India"
+    },
+    "ratingsAverage": 4.8,
+    "ratingsQuantity": 12,
+    "images": ["tour-rivers-1.jpg", "tour-rivers-2.jpg", "tour-rivers-3.jpg"],
+    "startDates": [
+      "2022-05-20T09:00:00.000Z",
+      "2022-09-10T09:00:00.000Z",
+      "2023-03-05T09:00:00.000Z"
+    ],
+    "duration": 12,
+    "maxGroupSize": 20,
+    "difficulty": "medium",
+    "guides": ["5c8a21d02f8fb814b56fa189", "5c8a1f4e2f8fb814b56fa185"],
+    "price": 2499,
+    "imageCover": "tour-rivers-cover.jpg",
+    "locations": [
+      {
+        "_id": "5c88fa8cf4afda39709c2993",
+        "description": "Ganges River",
+        "type": "Point",
+        "coordinates": [85.3131, 25.3176],
+        "day": 1
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2994",
+        "description": "Brahmaputra River",
+        "type": "Point",
+        "coordinates": [92.9376, 26.2006],
+        "day": 4
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2995",
+        "description": "Godavari River",
+        "type": "Point",
+        "coordinates": [79.5188, 19.7515],
+        "day": 7
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2996",
+        "description": "Kaveri River",
+        "type": "Point",
+        "coordinates": [78.6476, 12.4244],
+        "day": 10
+      },
+      {
+        "_id": "5c88fa8cf4afda39709c2997",
+        "description": "Backwaters of Kerala",
+        "type": "Point",
+        "coordinates": [76.3343, 9.4981],
+        "day": 12
+      }
+    ]
   }
+  
 ]

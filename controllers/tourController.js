@@ -1,9 +1,78 @@
+const multer = require('multer');
+const sharp = require('sharp');
+
 const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
+//*TOURS IMAGE UPLOAD FUNCTIONALITY
+//images will be stored in memory of  req.file.buffer as a buffer
+const multerStorage = multer.memoryStorage();
+
+//*CREATING FILTER
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('not an image! Please upload only images👍', 400), false);
+  }
+};
+
+//TO SAVE uploaded FILES
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+// 4) imageUpload middleware
+exports.uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
+
+//--- upload single image
+// upload.single('images') ;req.file
+
+//--- upload multiple images
+// upload.array('images',3);   req.files
+
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+  if (!req.files.imageCover || !req.files.images) {
+    return next();
+  }
+  console.log(req.files);
+
+  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+
+  // 1) RESIZE imageCover  AND PROCESSING
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.body.imageCover}`);
+
+  // 2) images PROCESSING
+  req.body.images = [];
+  await Promise.all(
+    req.files.images.map(async (image, i) => {
+      const fileName = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+      await sharp(image.buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${fileName}`);
+      req.body.images.push(fileName);
+    })
+  );
+
+  console.log('❌', req.body);
+
+  next();
+});
+
+//* READING FILE FROM LOCAL FILE
 // const tourFileContent = JSON.parse(
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 // );
@@ -15,120 +84,120 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // try {
-  //   console.log(req.query);
+// exports.getAllTours = catchAsync(async (req, res, next) => {
+// try {
+//   console.log(req.query);
 
-  // //TODO: BUILD QUERY
-  // //*[1A]  FILTERING 🧹🧹🧹🧹🧹🧹
+// //TODO: BUILD QUERY
+// //*[1A]  FILTERING 🧹🧹🧹🧹🧹🧹
 
-  // const queryObj = { ...req.query };
-  // const excludedFields = ['fields', 'page', 'sort', 'limit'];
-  // excludedFields.forEach((el) => delete queryObj[el]);
+// const queryObj = { ...req.query };
+// const excludedFields = ['fields', 'page', 'sort', 'limit'];
+// excludedFields.forEach((el) => delete queryObj[el]);
 
-  // //*[1B] : ADVANCE FILTERING(GREATER THAN , LESS THAN ,)
+// //*[1B] : ADVANCE FILTERING(GREATER THAN , LESS THAN ,)
 
-  // let queryString = JSON.stringify(queryObj);
-  // console.log(queryString);
-  // queryString = queryString.replace(
-  //   /\b(gte|gt|lte|lt)\b/g,
-  //   (match) => `$${match}`
-  // );
+// let queryString = JSON.stringify(queryObj);
+// console.log(queryString);
+// queryString = queryString.replace(
+//   /\b(gte|gt|lte|lt)\b/g,
+//   (match) => `$${match}`
+// );
 
-  // let query = Tour.find(JSON.parse(queryString));
+// let query = Tour.find(JSON.parse(queryString));
 
-  //*[2] IF PARAMS HAVE SORTING
-  // if (req.query.sort) {
-  //   const sortBy = req.query.sort.split(',').join(' ');
-  //   console.log(sortBy);
-  //   // sort(price , ratingsAverage)
-  //   query = query.sort(sortBy);
-  // } else {
-  //   query = query.sort(-'createdAT');
-  // }
-  // // filter object used in mongoDb
-  // {difficulty : 'easy' , duration:{$get:5}}
+//   //*[2] IF PARAMS HAVE SORTING
+// if (req.query.sort) {
+//   const sortBy = req.query.sort.split(',').join(' ');
+//   console.log(sortBy);
+//   // sort(price , ratingsAverage)
+//   query = query.sort(sortBy);
+// } else {
+//   query = query.sort(-'createdAT');
+// }
+// // filter object used in mongoDb
+// {difficulty : 'easy' , duration:{$get:5}}
 
-  // filter object from req.query
-  //{difficulty: 'easy',duration: { gte: '5' }, limit: '2',page: '3',sort: '3'}
+// filter object from req.query
+//{difficulty: 'easy',duration: { gte: '5' }, limit: '2',page: '3',sort: '3'}
 
-  //*[3] FIELD limitFields
-  // if (req.query.fields) {
-  //   const fields = req.query.fields.split(',').join(' ');
-  //   // console.log("😍😍😍😍",fields)
-  //   query = query.select(fields);
-  // } else {
-  //   query = query.select('-__v');
-  // }
+//   //*[3] FIELD limitFields
+// if (req.query.fields) {
+//   const fields = req.query.fields.split(',').join(' ');
+//   // console.log("😍😍😍😍",fields)
+//   query = query.select(fields);
+// } else {
+//   query = query.select('-__v');
+// }
 
-  //*[4] PAGINATION
-  //127.0.0.1:8000/api/v1/tours?page=2&limit=10
-  //page1(1-10), page2(11-20), page3(21-30)
+//   //*[4] PAGINATION
+//127.0.0.1:8000/api/v1/tours?page=2&limit=10
+//page1(1-10), page2(11-20), page3(21-30)
 
-  //^page=2&limit=10
-  // query = query.skip(10).limit(10) ;
-  // const pageVal = req.query.page * 1 || 1;
-  // const limitVal = req.query.limit * 1 || 100;
-  // // console.log("->>->>->>",pageVal , limitVal)
-  // const skipVal = (pageVal - 1) * limitVal;
-  // // console.log(skipVal)
-  // query = query.skip(skipVal).limit(limitVal);
+//^page=2&limit=10
+// query = query.skip(10).limit(10) ;
+// const pageVal = req.query.page * 1 || 1;
+// const limitVal = req.query.limit * 1 || 100;
+// // console.log("->>->>->>",pageVal , limitVal)
+// const skipVal = (pageVal - 1) * limitVal;
+// // console.log(skipVal)
+// query = query.skip(skipVal).limit(limitVal);
 
-  // if (req.query.page) {
-  //   const tourCount = await Tour.countDocuments();
-  //   if (skipVal >= tourCount) throw new Error("This page doesn't exist");
-  // }
+// if (req.query.page) {
+//   const tourCount = await Tour.countDocuments();
+//   if (skipVal >= tourCount) throw new Error("This page doesn't exist");
+// }
 
-  //TODO: EXECUTE QUERY
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .pagination();
-  const tourContent = await features.query;
+//   //TODO: EXECUTE QUERY
+//   const features = new APIFeatures(Tour.find(), req.query)
+//     .filter()
+//     .sort()
+//     .limitFields()
+//     .pagination();
+//   const tourContent = await features.query;
 
-  //TODO: SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    requestTime: req.requestTime,
-    results: tourContent.length,
-    data: { tours: tourContent },
-  });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-});
+//   //TODO: SEND RESPONSE
+//   res.status(200).json({
+//     status: 'success',
+//     requestTime: req.requestTime,
+//     results: tourContent.length,
+//     data: { tours: tourContent },
+//   });
+//   // } catch (err) {
+//   //   res.status(404).json({
+//   //     status: 'fail',
+//   //     message: err,
+//   //   });
+// });
 
-exports.getTour = catchAsync(async (req, res, next) => {
-  // try {
-  const Id = req.params.id;
-  // const tour = await Tour.findOne({
-  //   _id: Id,
-  // });
-  const tour = await Tour.findById(Id).populate('reviews');
+// exports.getTour = catchAsync(async (req, res, next) => {
+//   // try {
+//   const Id = req.params.id;
+//   // const tour = await Tour.findOne({
+//   //   _id: Id,
+//   // });
+//   const tour = await Tour.findById(Id).populate('reviews');
 
-  // const tour = await Tour.findById(Id).populate({
-  //   path: 'guides',
-  //   select: '-__v -passwordChangedAt',
-  // });
+//   // const tour = await Tour.findById(Id).populate({
+//   //   path: 'guides',
+//   //   select: '-__v -passwordChangedAt',
+//   // });
 
-  if (!tour) {
-    return next(new AppError('no tour found with that id', 404));
-  }
+//   if (!tour) {
+//     return next(new AppError('no tour found with that id', 404));
+//   }
 
-  res.status(200).json({
-    status: 'success',
-    data: { tour },
-  });
-  // } catch (err) {
-  //   res.status(404).json({
-  //     status: 'fail',
-  //     message: 'There is some error !!',
-  //   });
-  // }
-});
+//   res.status(200).json({
+//     status: 'success',
+//     data: { tour },
+//   });
+//   // } catch (err) {
+//   //   res.status(404).json({
+//   //     status: 'fail',
+//   //     message: 'There is some error !!',
+//   //   });
+//   // }
+// });
 
 // exports.createTour = catchAsync(
 //   async (req, res, next) => {
@@ -144,16 +213,16 @@ exports.getTour = catchAsync(async (req, res, next) => {
 //     });
 //   }
 
-  // try {
+// try {
 
-  // } catch (err) {
-  //   console.log('error 🔥🔥🔥', err);
-  //   res.status(400).json({
-  //     status: 'fail',
-  //     message: err,
-  //   });
-  // }
-  // };
+// } catch (err) {
+//   console.log('error 🔥🔥🔥', err);
+//   res.status(400).json({
+//     status: 'fail',
+//     message: err,
+//   });
+// }
+// };
 // );
 
 // exports.updateTour = catchAsync(async (req, res, next) => {
@@ -183,6 +252,8 @@ exports.getTour = catchAsync(async (req, res, next) => {
 // });
 
 //* USING FACTORY FUNCTIONS
+exports.getAllTours = factory.getAll(Tour);
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.createTour = factory.createOne(Tour);
 exports.updateTour = factory.updateOne(Tour);
 exports.deleteTour = factory.deleteOne(Tour);
@@ -294,4 +365,74 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   //   console.log('error 🔥🔥🔥', err);
   //   res.status(404);
   // }
+});
+
+exports.getToursWithIn = catchAsync(async (req, res, next) => {
+  // /tours-within/:distance/center/:latlng/unit/:unit'
+  const { latlng, distance, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  const radius = distance === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitude and longitude in the format of latlng',
+        400
+      )
+    );
+  }
+  console.log(latlng, distance, unit);
+
+  const tours = await Tour.find({
+    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: {
+      data: tours,
+    },
+  });
+});
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  const multiplier = unit === 'km' ? 0.001 : 0.000621;
+
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitude and longitude in the format of latlng',
+        400
+      )
+    );
+  }
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1],
+        },
+        distanceField: 'distance',
+        distanceMultiplier: multiplier,
+      },
+    },
+    {
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: distances,
+    },
+  });
 });

@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 
 const Tour = require('../models/tourModel');
 const Review = require('../models/reviewModel');
+const User = require('../models/userModel');
 
 dotenv.config({ path: '../config.env' });
 const db = process.env.DATABASE.replace(
@@ -22,68 +23,40 @@ mongoose
     console.log('Db connection successful !!!');
   });
 
-//READ JSON FILE
-const fileData = JSON.parse(
-  fs.readFileSync('./data/tours.json', 'utf-8', (err) => {
-    console.log(err);
-  })
+// READ JSON FILE
+const tours = JSON.parse(fs.readFileSync('./data/tours.json', 'utf-8'));
+const users = JSON.parse(fs.readFileSync(`./data/users.json`, 'utf-8'));
+const reviews = JSON.parse(
+  fs.readFileSync(`./data/reviews.json`, 'utf-8')
 );
 
-//IMPORT TO DATABASE
+// IMPORT DATA INTO DB
 const importData = async () => {
   try {
-    await Tour.create(fileData);
-    console.log('data saved to database successfully !!!');
-    process.exit();
+    await Tour.create(tours);
+    await User.create(users, { validateBeforeSave: false });
+    await Review.create(reviews);
+    console.log('Data successfully loaded!');
   } catch (err) {
     console.log(err);
   }
+  process.exit();
 };
 
-const importReviewData = async () =>{
-  try{
-    await Review.create(fileData);
-    console.log('data saved to database successfully !!!')
-    process.exit()
-  }
-  catch(err){
-    console.log(err)
-  }
-}
-
-const deleteReviewData = async ()=>{
-  try{
-await Review.deleteMany();
-console.log('reviews are deleted from databse succefully !!!👍👍👍')
-process.exit()
-  }catch(err){
-console.log("❌",err)
-  }
-}
-
+// DELETE ALL DATA FROM DB
 const deleteData = async () => {
   try {
     await Tour.deleteMany();
-    console.log('data deleted successfully !!!');
-    process.exit();
+    await User.deleteMany();
+    await Review.deleteMany();
+    console.log('Data successfully deleted!');
   } catch (err) {
     console.log(err);
   }
+  process.exit();
 };
-
-// console.log(process.argv)
-if (process.argv[2] === '--importTour') {
+if (process.argv[2] === '--import') {
   importData();
-} else if (process.argv[2] === '--deleteTour') {
+} else if (process.argv[2] === '--delete') {
   deleteData();
-}
-
-
-if(process.argv[2] === '--importReview')
-{
-  importReviewData();
-}
-else if(process.argv[2] === '--deleteReview')
-{
-  deleteReviewData();
 }

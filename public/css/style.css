@@ -368,14 +368,14 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: -webkit-gradient(
+  /* background-image: -webkit-gradient(
     linear,
     left top,
     right bottom,
     from(#7dd56f),
     to(#28b487)
   );
-  background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
+  background-image: linear-gradient(to right bottom, #7dd56f, #28b487); */
   opacity: 0.85;
 }
 
@@ -571,7 +571,11 @@ body {
   -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15) !important;
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.15) !important;
 }
-
+.mapPopup {
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  font-size: 1.4rem;
+}
 .section-reviews {
   margin-top: calc(0px - var(--section-rotate));
   padding: calc(5rem + var(--section-rotate)) 0;
@@ -830,6 +834,7 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  justify-content: flex-end;
 }
 .footer__nav li {
   margin-left: 1.5rem;
@@ -1117,7 +1122,49 @@ body {
   );
   background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
   opacity: 0.7;
+  transition: opacity 0.3s ease;
+  z-index: 1; /* Add a higher z-index to make sure the overlay is on top */
 }
+
+.card__picture-overlay::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.3s ease;
+  z-index: 2; /* Add a higher z-index to make sure this element is on top of the overlay */
+}
+
+.card__picture-overlay::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
+  z-index: 3; /* Add a higher z-index to make sure this element is on top of the overlay and ::before pseudo-element */
+}
+
+.card:hover .card__picture-overlay {
+  opacity: 0;
+}
+
+.card:hover .card__picture-overlay::before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.card:hover .card__picture-overlay::after {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
 .card__picture-img {
   -o-object-fit: cover;
   object-fit: cover;
@@ -1141,7 +1188,7 @@ body {
   grid-column: 1 / -1;
   font-size: 1.5rem;
   font-style: italic;
-  margin-top: -1rem;
+  /* margin-top: -1rem; */
   margin-bottom: 0.75rem;
 }
 .card__data {
@@ -1322,3 +1369,34 @@ body {
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
 }
+/* .lds-hourglass {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-hourglass:after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  margin: 8px;
+  box-sizing: border-box;
+  border: 32px solid #dfc;
+  border-color: #dfc transparent #dfc transparent;
+  animation: lds-hourglass 1.2s infinite;
+}
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
+} */

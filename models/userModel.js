@@ -3,15 +3,11 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'please provide your name !'],
-    match: [
-      new RegExp(/^[a-zA-Z\s]+$/),
-      '{VALUE} is not valid. Please use only letters'
-    ],
+    match: [/^[a-zA-Z\s]+$/, '{VALUE} is not valid. Please use only letters'],
     maxLength: [20, 'A user name must not be greater than 20 characters'],
     minLength: [5, 'A user name must have more or equal then 5 chars'],
   },
@@ -27,22 +23,25 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'guide', 'lead-guide', 'admin'],
     default: 'user',
   },
-  photo: String,
+  photo: {
+    type: String,
+    default: 'default.jpg ',
+  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
     maxLength: [20, 'passowrd must not be greater than 20 characters'],
     minLength: [6, 'passowrd must be greater than 6 characters'],
-    unique: true,
     select: false,
   },
   passwordConfirm: {
     type: String,
-    trim:true,
+    trim: true,
     required: [true, 'Please confirm your password'],
     validate: {
+      //this only works on create and save !!!
       validator: function (el) {
-        return el === this.password;
+        return el === this.password; //abc === abc
       },
       message: 'please check your password again',
     },
@@ -50,13 +49,12 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  active :{
-    type:Boolean ,
+  active: {
+    type: Boolean,
     default: true,
-    select : false,
-  }
+    select: false,
+  },
 });
-
 
 userSchema.pre('save', async function (next) {
   //ONLY RUN FUNCTION IF PASSWORD ACTUALLY MODIFIED
@@ -75,14 +73,15 @@ userSchema.pre('save', function (next) {
     return next();
   }
 
+  //sometime databse updation becomes slow , thats why we are subtracting 1sec to it
   this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
-userSchema.pre(/^find/, function(next){
-  this.find({active:{$ne:false}})
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
   next();
-})
+});
 
 userSchema.methods.correctPassword = async function (
   candidatePassword,
@@ -111,8 +110,10 @@ userSchema.methods.createPasswordResetToken = function () {
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
+
+  //expirs after to 10mins
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-  console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ resetToken }, this.passwordResetToken);
   return resetToken;
 };
 

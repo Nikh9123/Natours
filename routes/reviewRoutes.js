@@ -7,19 +7,26 @@ const router = express.Router({
 });
 
 //POST tour/903rjwo/reviews
+router.use(authController.protect);
 router
   .route('/')
-  .get(authController.protect, reviewController.getAllReviews)
+  .get(reviewController.getAllReviews)
   .post(
-    authController.protect,
     authController.restrictTo('user'),
+    reviewController.setTourIds,
     reviewController.createReview
   );
 
-//! NOT AUTHORIZED
 router
   .route('/:id')
-  .patch(reviewController.updateReview)
-  .delete(reviewController.deleteReview);
+  .get(reviewController.getReview)
+  .patch(
+    authController.restrictTo('admin', 'user'),
+    reviewController.updateReview
+  )
+  .delete(
+    authController.restrictTo('admin', 'user'),
+    reviewController.deleteReview
+  );
 
 module.exports = router;

@@ -11,10 +11,9 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createSendToken = (user, statusCode, res ) => {
-
+const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
-  console.log(user)
+  console.log(user);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -27,11 +26,10 @@ const createSendToken = (user, statusCode, res ) => {
 
   res.cookie('jwt', token, cookieOptions);
 
-  if(process.env.NODE_ENV === 'production')
-  {
-    cookieOptions.secure = true ;
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
   }
-  user.password = undefined ;
+  user.password = undefined;
   res.status(statusCode).json({
     status: 'success',
     token,
@@ -71,9 +69,17 @@ exports.logIn = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-exports.logOut = catchAsync( async(req,res,next)=>{
+exports.logOut = (req, res, next) => {
   // createSendToken(req.user, 200, res, true);
-})
+  res.cookie('jwt', 'youareloggigngout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    status: 'success',
+  });
+};
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) GETTING TOKEN AND CHECK IF IT'S THERE
@@ -83,6 +89,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    //if there is a cookie in browser
+    token = req.cookies.jwt;
   }
 
   if (!token) {
@@ -104,17 +113,51 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
       new AppError(
-        'User recently changed password! Please log in again...',
+        'you recently changed password! Please log in again...',
         401
       )
     );
   }
 
   req.user = currentUser;
+  //PASSING DATA TO PUG TEMPLATE
+  res.locals.user = currentUser;
 
   //IF ERROR IN CODE THEN GOTO ERROR HANDLER ELSE GIVE ACCESS TO RUN OTHER MIDDLEWARE, GRANT ACCESS TO PROTECTED ROUTE
   next();
 });
+
+//FOR RENDERING PAGES ONLY
+exports.isLoggedIn = async (req, res, next) => {
+  // 1) GETTING TOKEN AND CHECK IF IT'S THERE IS LOGGED IN USERS
+  if (req.cookies.jwt) {
+    //if there is a cookie in browser
+    // 2) VERIFICATION OF TOKEN
+    try {
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // 3) CHECK IF USER STILL EXISTS
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+      // 4) CHECK IF USER PASSWORD CHANGED AFTER THE TOKEN WAS ISSUED
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      //THERE IS A LOGGED IN USER, PASSING DATA TO PUG TEMPLATE
+      res.locals.user = currentUser;
+      return next();
+    } catch (err) {
+      return next();
+    }
+  }
+  next();
+};
 
 exports.restrictTo =
   (...roles) =>
@@ -127,7 +170,7 @@ exports.restrictTo =
     next();
   };
 
-exports.forgotPassword = catchAsync(async (req, res, next) => {
+exports.forgotPassword = async (req, res, next) => {
   // 1) GET USER BASED ON POSTED EMAIL
   const user = await User.findOne({ email: req.body.email });
 
@@ -166,9 +209,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       )
     );
   }
-});
+};
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
+
   // 1) get user based on token
   const hashedToken = crypto
     .createHash('sha256')
@@ -183,6 +227,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('Token is invalid or has expired ', 400));
   }
+
   // 2)if token isn't expired and there is user , set the password
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
@@ -197,14 +242,17 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) get user from collection
+  // console.log('😘😘😘😘', req.body);
   const user = await User.findById(req.user.id).select('+password');
 
-  // 2) check if POSTed current password is correct
+  // // 2) check if POSTed current password is correct
+  // console.log('❌', req.body.oldPassword, '🫠', user.password);
+  // console.log('🧔‍♂️', user);
+  
   if (!(await user.correctPassword(req.body.oldPassword, user.password))) {
     return next(new AppError('Your old password is wrong...', 401));
   }
 
-  console.log('hello');
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
