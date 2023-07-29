@@ -31,7 +31,7 @@ const sendErrorProd = (err, req, res) => {
 
   // ERROR IS IN API THEN
   if (req.originalUrl.startsWith('/api')) {
-    //OPERATIONL ERROR
+    //OPERATIONaL ERROR
     if (err.isOperational) {
       return res.status(err.statusCode).json({
         status: err.status,
@@ -42,7 +42,7 @@ const sendErrorProd = (err, req, res) => {
     //PROGRAMMING AND UNKNOWN ERRORS(npm packages)
 
     //1) catch error and log into console
-    console.error('🌋🌋🌋 Error', err);
+    console.error('🌋🌋🌋❌ Error', err);
 
     //2) send msg to user and hide details(api user)
     return res.status(500).json({
@@ -116,7 +116,6 @@ exports.errorController = (err, req, res, next) => {
     if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
     if (err.message === 'jwt malformed') error = handlePasswordConfirmError();
     // if (err.name === 'ValidationError') error = handleValidationErrorDB(error);
-
     sendErrorProd(error, req, res);
   }
 };

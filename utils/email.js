@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
-const pug = require('pug');
 const { convert } = require('html-to-text');
+const transport = require('nodemailer-brevo-transport');
+const pug = require('pug');
 
 module.exports = class Email {
   constructor(user, url) {
@@ -13,8 +14,16 @@ module.exports = class Email {
   newTransport() {
 
     if (process.env.NODE_ENV === 'production') {
-      //sendGrid
-      return 1;
+      console.log('hello5')
+      //sendInBlue
+      return nodemailer.createTransport({
+        host: process.env.SENDINBLUE_HOST,
+        port: process.env.SENDINBLUE_PORT,
+        auth:{
+          user:process.env.SENDINBLUE_USERNAME,
+          pass:process.env.SENDINBLUE_PASSWORD
+        }
+      })
     }
 
     const transporter = nodemailer.createTransport({
@@ -49,7 +58,7 @@ module.exports = class Email {
     });
     // 2) DEFINE email OPTIONS
     const mailOptions = {
-      from: 'Nikhil Satyam <nikhilsatyam@gmail.com>',
+      from: this.from,
       to: this.to,
       subject,
       html,

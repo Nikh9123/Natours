@@ -232,7 +232,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 3) updte changedPasswordAt property for the user
   await user.save();
 
-  createSendToken(null, 200, res);
+  createSendToken(user, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
