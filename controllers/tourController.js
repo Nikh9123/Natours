@@ -72,10 +72,6 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
   next();
 });
 
-//* READING FILE FROM LOCAL FILE
-// const tourFileContent = JSON.parse(
-//   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-// );
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';

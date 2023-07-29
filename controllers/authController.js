@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const sendEmail = require('../utils/email');
+const Email = require('../utils/email');
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -40,6 +40,7 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signUp = catchAsync(async (req, res, next) => {
+  console.log('hello');
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -48,6 +49,10 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role,
   });
+  const url = `${req.protocol}://${req.get('host')}/me`;
+
+  await new Email(newUser, url).sendWelcome();
+
   createSendToken(newUser, 201, res);
 });
 
@@ -112,10 +117,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 4) CHECK IF USER PASSWORD CHANGED AFTER THE TOKEN WAS ISSUED
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
-      new AppError(
-        'you recently changed password! Please log in again...',
-        401
-      )
+      new AppError('you recently changed password! Please log in again...', 401)
     );
   }
 
@@ -179,18 +181,12 @@ exports.forgotPassword = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // 3) SEND IT TO USER'S EMAIL ADDRESS
-  const resetUrl = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password ? Submit a PATCH request with your password and passowrdConfirm to :${resetUrl}. \n if you didn't forget your password, please ignore this email !`;
-  // console.log('😍😍', user.email);
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Your password reset token(valid for 10 min)',
-      message,
-    });
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/resetPassword/${resetToken}`;
+    await new Email(user, resetUrl).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',
@@ -212,7 +208,6 @@ exports.forgotPassword = async (req, res, next) => {
 };
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-
   // 1) get user based on token
   const hashedToken = crypto
     .createHash('sha256')
@@ -248,7 +243,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // // 2) check if POSTed current password is correct
   // console.log('❌', req.body.oldPassword, '🫠', user.password);
   // console.log('🧔‍♂️', user);
-  
+
   if (!(await user.correctPassword(req.body.oldPassword, user.password))) {
     return next(new AppError('Your old password is wrong...', 401));
   }
