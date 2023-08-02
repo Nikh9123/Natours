@@ -6,7 +6,7 @@ const router = express.Router({
   mergeParams: true,
 });
 
-//POST tour/903rjwo/reviews
+//POST tour/{tour.id}/reviews
 router.use(authController.protect);
 router
   .route('/')

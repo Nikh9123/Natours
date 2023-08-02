@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "@stripe/stripe-js": "^1.54.1",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
@@ -38,6 +39,7 @@
     "pug": "^3.0.2",
     "sharp": "^0.32.4",
     "slugify": "^1.6.6",
+    "stripe": "^7.0.0",
     "validator": "^13.9.0",
     "xss-clean": "^0.1.4"
   },

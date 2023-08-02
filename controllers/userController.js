@@ -81,8 +81,7 @@ const filterdObj = (obj, ...allowedFields) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) IF USER WANT TO UPDATE PASSWORD , GENERTE ERROR
-  console.log('🌋🌋', req.file);
-  console.log('🌴🌴', req.body);
+
   if (req.body.password || req.body.passwordConfirm) {
     return next(
       new AppError(
@@ -119,7 +118,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     active: false,
   });
 
-  console.log(req.user);
   res.status(204).json({
     status: 'success',
     data: 'null',

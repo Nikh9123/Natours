@@ -12,12 +12,15 @@ const userRouter = require(`./routes/userRoutes`);
 const tourRouter = require('./routes/tourRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
+const bookingRouter = require('./routes/bookingRoutes')
 
+//*ERROR HANDLING ROUTES
 const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
 const app = express();
 
+//& SETTING ENGINE and PATH TO SERVE WEBSITE PAGES
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -32,7 +35,7 @@ app.use(helmet({ contentSecurityPolicy: false }));
 
 //& LIMIT THE UPCOMING REQUEST
 const limiter = rateLimiter({
-  windowMs: 60 * 60 * 1000, // 15 minutes
+  windowMs: 60 * 60 * 1000, // 60 mins minutes
   max: 100, // Limit each IP to 100 requests per `window` (here, per 60 minutes)
   message: 'Too many requests from this IP , Try after sometimes !',
   // standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
@@ -48,13 +51,13 @@ if (process.env.NODE_ENV === 'development') {
   // console.log(morgan('dev'))
 }
 
-//& BODY PARSER , READING DATA FROM THE REQ.BODY
+//& BODY PARSER , READING DATA FROM THE REQ.BODY also LIMITING USER TO SEND ONLY LIMITED SIZE DATA
 app.use(express.json({ limit: '10kb' }));
 
-//TO READ UPCOMING POST DATA FROM BROWSER 
+//& TO READ UPCOMING POST DATA FROM BROWSER 
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-//TO READ UPCOMING COOKIES FROM BROWSER
+//& TO READ UPCOMING COOKIES FROM BROWSER
 app.use(cookieParser());
 
 //&  DATA SANITIZATION AGAINST UNUSUAL NoSQL QUERY INJECTION
@@ -93,6 +96,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings' , bookingRouter);
 
 app.all('*', (req, res, next) => {
   // const err = new Error(
