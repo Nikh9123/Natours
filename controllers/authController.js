@@ -131,6 +131,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 //FOR RENDERING PAGES ONLY
 exports.isLoggedIn = async (req, res, next) => {
+  
   // 1) GETTING TOKEN AND CHECK IF IT'S THERE IS LOGGED IN USERS
   if (req.cookies.jwt) {
     //if there is a cookie in browser

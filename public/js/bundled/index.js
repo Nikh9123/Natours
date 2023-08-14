@@ -579,6 +579,7 @@ var _login = require("./login");
 var _leaflet = require("./leaflet");
 var _updateSettings = require("./updateSettings");
 var _stripe = require("./stripe");
+var _signUp = require("./signUp");
 //CHECKING DOM ELEMENTS
 const leafLet = document.getElementById("map");
 //DELEGATON
@@ -588,6 +589,7 @@ if (leafLet) {
 }
 const loginForm = document.querySelector(".form--login");
 const logOutBtn = document.querySelector(".nav__el--logout");
+const signUpBtn = document.querySelector(".nav__el--cta");
 const updateForm = document.querySelector(".form-user-data");
 const userPasswordForm = document.querySelector(".form-user-password");
 const bookBtn = document.getElementById("book-tour");
@@ -601,7 +603,7 @@ document.querySelector(".form--login").addEventListener("submit", (e)=>{
 if (logOutBtn) logOutBtn.addEventListener("click", (0, _login.logOut));
 if (updateForm) updateForm.addEventListener("submit", (e)=>{
     e.preventDefault();
-    //PROGRAMITICALLY RECREATING MULTIPART FORM DATA 
+    //PROGRAMITICALLY RECREATING MULTIPART FORM DATA
     const form = new FormData();
     form.append("name", document.getElementById("name").value);
     form.append("email", document.getElementById("email").value);
@@ -631,9 +633,18 @@ if (bookBtn) bookBtn.addEventListener("click", (e)=>{
     e.target.textContent = "Processing...";
     const { tourId } = e.target.dataset;
     (0, _stripe.bookTour)(tourId);
+// e.target.textContent = 'Book Tour';
+});
+if (signUpBtn) document.querySelector(".nav__el--cta").addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const name = documet.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const passwordConfirm = document.getElementById("passwordConfirm").value;
+    (0, _signUp.signUp)(name, email, password, passwordConfirm);
 });
 
-},{"@babel/polyfill":"dTCHC","./login":"7yHem","./leaflet":"xvuTT","./updateSettings":"l3cGY","./stripe":"10tSC"}],"dTCHC":[function(require,module,exports) {
+},{"@babel/polyfill":"dTCHC","./login":"7yHem","./leaflet":"xvuTT","./updateSettings":"l3cGY","./stripe":"10tSC","./signUp":"a26Sx"}],"dTCHC":[function(require,module,exports) {
 "use strict";
 require("f50de0aa433a589b");
 var _global = _interopRequireDefault(require("4142986752a079d4"));
@@ -12145,6 +12156,36 @@ const bookTour = async (tourId)=>{
     } catch (err) {
         console.log(err);
         (0, _alerts.showAlert)("error", err);
+    }
+};
+
+},{"axios":"jo6P5","./alerts":"6Mcnf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"a26Sx":[function(require,module,exports) {
+/* eslint-disable */ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "signUp", ()=>signUp);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _alerts = require("./alerts");
+const signUp = async (name, email, password, passwordConfirm)=>{
+    try {
+        const res = await (0, _axiosDefault.default)({
+            method: "POST",
+            url: "http://127.0.0.1:8000/api/v1/users/signup",
+            data: {
+                name,
+                email,
+                password,
+                passwordConfirm
+            }
+        });
+        if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Welcome to Natours\uD83D\uDE03 ! Your Account has been created successfully!");
+            window.setTimeout(()=>{
+                location.assign("/");
+            }, 500);
+        }
+    } catch (err) {
+        (0, _alerts.showAlert)("err", err.response.data.message);
     }
 };
 

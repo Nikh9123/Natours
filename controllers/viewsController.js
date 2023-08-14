@@ -42,16 +42,22 @@ exports.getLogIn = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getSignUp = catchAsync(async (req, res, next) => {
+  res.status(200).render('signUp', {
+    title: 'Sign up',
+  });
+});
+
 exports.getAccount = catchAsync(async (req, res, next) => {
   res.status(200).render('account', {
     title: 'Your account',
   });
 });
 
-// exports.updateUserData = catchAsync(async (req, res, next) => {
-  
-//   res.status(200).render('account', {
-//     title: 'Your account',
-//     user: updatedUser,
-//   });
-// });
+exports.updateUserData = catchAsync(async (req, res, next) => {
+  const updatedUser = req.user ;
+  res.status(200).render('account', {
+    title: 'Your account',
+    user: updatedUser,
+  });
+});
