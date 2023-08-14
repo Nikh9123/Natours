@@ -4,7 +4,7 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-router.route(authController.protect);
+router.use(authController.protect);
 
 router.post('/checkout-session/:tourId', bookingController.getCheckoutSession);
 
