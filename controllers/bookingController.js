@@ -4,7 +4,7 @@ const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 // const AppError = require("../utils/appError");
 const catchAsync = require('../utils/catchAsync');
-// const factory = require('./handlerFactory');
+const factory = require('./handlerFactory');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
@@ -61,7 +61,7 @@ When you submit the payment using one of these test cards, it will show up in yo
 
 exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   //this is only temproray , because it is unsecure everyone can book tour if anyone access or know about this url , we will implement this after deploye on server
-  
+
   const { tour, user, price } = req.query;
 
   if (!user || !price || !tour) {
@@ -69,5 +69,13 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   }
   await Booking.create({ tour, user, price });
 
+  //hiding url to make process little bit less transparent to user 
   res.redirect(req.originalUrl.split('?')[0])
 });
+
+
+exports.createBooking = factory.createOne(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.getAllBookings = factory.getAll(Booking);
+exports.updateBooking = factory.updateOne(Booking)
+exports.deleteBooking = factory.deleteOne(Booking);
