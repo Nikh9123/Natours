@@ -1,5 +1,4 @@
-# Natours: Explore the World with Eco-Friendly Tours
-# Built using modern technologies : JavsScript,NodeJs,MongoDb,Mongoose,Pug 
+
 
 
 
@@ -8,8 +7,11 @@
 ![Natours overview](https://github.com/Nikh9123/Natours/assets/110683580/00aba55c-1786-4cdb-934b-32308350ccd0)
 
 
+# Natours: Explore the World with Eco-Friendly Tours
+# Built using modern technologies : JavsScript,NodeJs,MongoDb,Mongoose,Pug 
+
 ## npm Packages Used
-Here are the some npm packages used in this project:
+Here are some npm packages used in this project:
 
 - [crypto](https://www.npmjs.com/package/crypto): Provides cryptographic functionality for secure operations.
 - [promisify](https://www.npmjs.com/package/util): Converts callback-based functions into Promises for asynchronous operations.
