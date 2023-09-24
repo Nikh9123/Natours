@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const { convert } = require('html-to-text');
 const transport = require('nodemailer-brevo-transport');
 const pug = require('pug');
+// const rese = require('rese');
 
 module.exports = class Email {
   constructor(user, url) {

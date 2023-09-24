@@ -69,13 +69,12 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
   }
   await Booking.create({ tour, user, price });
 
-  //hiding url to make process little bit less transparent to user 
-  res.redirect(req.originalUrl.split('?')[0])
+  //hiding url to make process little bit less transparent to user
+  res.redirect(req.originalUrl.split('?')[0]);
 });
-
 
 exports.createBooking = factory.createOne(Booking);
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);
-exports.updateBooking = factory.updateOne(Booking)
+exports.updateBooking = factory.updateOne(Booking);
 exports.deleteBooking = factory.deleteOne(Booking);

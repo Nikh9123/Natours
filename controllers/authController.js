@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
+const ms = require('ms');
+
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
@@ -14,18 +16,20 @@ const signToken = (id) =>
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
   console.log(user);
+  // Calculate the expiration date
+  const expirationDate = new Date(Date.now() + ms(process.env.JWT_EXPIRES_IN));
   const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    // Set the 'expires' option
+    expires: expirationDate,
     httpOnly: true,
   };
+  console.log();
   // if (clearCookie) {
   //   cookieOptions.expires = new Date(Date.now() - 1); // Expire the cookie immediately
   // }
 
+  console.log("hello444", cookieOptions);
   res.cookie('jwt', token, cookieOptions);
-
   if (process.env.NODE_ENV === 'production') {
     cookieOptions.secure = true;
   }
@@ -50,7 +54,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     role: req.body.role,
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
-
+  console.log(url)
   await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
@@ -131,7 +135,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 //FOR RENDERING PAGES ONLY
 exports.isLoggedIn = async (req, res, next) => {
-  
   // 1) GETTING TOKEN AND CHECK IF IT'S THERE IS LOGGED IN USERS
   if (req.cookies.jwt) {
     //if there is a cookie in browser
