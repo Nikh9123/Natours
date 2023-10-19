@@ -1,0 +1,100 @@
+extends base 
+include _reviewCard    
+
+block append head
+  link(rel='stylesheet' href='https://unpkg.com/leaflet@1.8.0/dist/leaflet.css'
+   integrity='sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==' crossorigin='')
+  script(src='https://unpkg.com/leaflet@1.8.0/dist/leaflet.js'
+   integrity='sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=='
+   crossorigin='')
+
+mixin overviewBox(label , icons, text)
+  .overview-box__detail
+    svg.overview-box__icon
+      use(xlink:href=`/img/icons.svg#icon-${icons}`)
+    span.overview-box__label= label
+    span.overview-box__text= text
+
+block content 
+  section.section-header
+    .header__hero
+      .header__hero-overlay &nbsp;
+      img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
+
+    .heading-box
+      h1.heading-primary
+        span= `${tour.name}`
+      .heading-box__group
+        .heading-box__detail
+          svg.heading-box__icon
+            use(xlink:href='/img/icons.svg#icon-clock')
+          span.heading-box__text= `${tour.duration} days`
+        .heading-box__detail
+          svg.heading-box__icon
+            use(xlink:href='/img/icons.svg#icon-map-pin')
+          span.heading-box__text= tour.startLocation.description
+
+  section.section-description
+    .overview-box
+      div
+        .overview-box__group
+          h2.heading-secondary.ma-bt-lg Quick facts
+
+          - const date = tour.startDates[1].toLocaleString('en-in', {month: 'long', year: 'numeric'})
+
+          +overviewBox('Next date','calendar',date)
+          +overviewBox('Difficulty','trending-up',tour.difficulty)
+          +overviewBox('Participants','user',`${tour.maxGroupSize} people`)
+          +overviewBox('Rating','star',`${tour.ratingsAverage} / 5`)
+
+
+        .overview-box__group
+          h2.heading-secondary.ma-bt-lg Your tour guides
+
+          each guide in tour.guides
+            .overview-box__detail
+              img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+              -if(guide.role === 'lead-guide')
+                span.overview-box__label Lead guide 
+              -if(guide.role === 'guide')
+                span.overview-box__label Tour guide 
+              span.overview-box__text= guide.name
+
+    .description-box
+      h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
+
+      -const paragraphs = tour.description.split('\n');
+
+      each p in paragraphs 
+        p.description__text= p
+
+
+  section.section-pictures
+    each img, i in tour.images
+      .picture-box
+        img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+
+
+
+  section.section-map
+    #map(data-locations= `${JSON.stringify(tour.locations)}`)
+
+  section.section-reviews
+    .reviews
+      each review in tour.reviews
+        +reviewCard(review)
+
+
+  section.section-cta
+    .cta
+      .cta__img.cta__img--logo
+        img(src='/img/logo-white.png', alt='Natours logo')
+      img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='tour picture')
+      img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='tour picture')
+      .cta__content
+        h2.heading-secondary What are you waiting for?
+        p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
+        if user 
+          button.btn.btn--green.span-all-rows#book-tour(data-tour-id= `${tour.id}`) Book tour now!
+        else 
+          a.button.btn.btn--green.span-all-rows(href='/login') Log in to book tour
