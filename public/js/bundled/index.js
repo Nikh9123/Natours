@@ -142,7 +142,7 @@
       this[globalName] = mainExports;
     }
   }
-})({"aC5kS":[function(require,module,exports) {
+})({"dafvh":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
@@ -227,9 +227,15 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== "undefined") {
     var hostname = getHostname();
     var port = getPort();
     var protocol = HMR_SECURE || location.protocol == "https:" && !/localhost|127.0.0.1|0.0.0.0/.test(hostname) ? "wss" : "ws";
-    var ws = new WebSocket(protocol + "://" + hostname + (port ? ":" + port : "") + "/");
+    var ws;
+    try {
+        ws = new WebSocket(protocol + "://" + hostname + (port ? ":" + port : "") + "/");
+    } catch (err) {
+        if (err.message) console.error(err.message);
+        ws = {};
+    }
     // Web extension context
-    var extCtx = typeof chrome === "undefined" ? typeof browser === "undefined" ? null : browser : chrome;
+    var extCtx = typeof browser === "undefined" ? typeof chrome === "undefined" ? null : chrome : browser;
     // Safari doesn't support sourceURL in error stacks.
     // eval may also be disabled via CSP, so do a quick check.
     var supportsSourceURL = false;
@@ -293,7 +299,7 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== "undefined") {
         }
     };
     ws.onerror = function(e) {
-        console.error(e.message);
+        if (e.message) console.error(e.message);
     };
     ws.onclose = function() {
         console.warn("[parcel] \uD83D\uDEA8 Connection to the HMR server was lost");
@@ -303,7 +309,7 @@ function removeErrorOverlay() {
     var overlay = document.getElementById(OVERLAY_ID);
     if (overlay) {
         overlay.remove();
-        console.log("[parcel] ✨ Error resolved");
+        console.log("[parcel] \u2728 Error resolved");
     }
 }
 function createErrorOverlay(diagnostics) {
@@ -319,13 +325,13 @@ ${frame.code}`;
         errorHTML += `
       <div>
         <div style="font-size: 18px; font-weight: bold; margin-top: 20px;">
-          🚨 ${diagnostic.message}
+          \u{1F6A8} ${diagnostic.message}
         </div>
         <pre>${stack}</pre>
         <div>
           ${diagnostic.hints.map((hint)=>"<div>\uD83D\uDCA1 " + hint + "</div>").join("")}
         </div>
-        ${diagnostic.documentation ? `<div>📝 <a style="color: violet" href="${diagnostic.documentation}" target="_blank">Learn more</a></div>` : ""}
+        ${diagnostic.documentation ? `<div>\u{1F4DD} <a style="color: violet" href="${diagnostic.documentation}" target="_blank">Learn more</a></div>` : ""}
       </div>
     `;
     }
@@ -421,15 +427,10 @@ async function hmrApplyUpdates(assets) {
             let promises = assets.map((asset)=>{
                 var _hmrDownload;
                 return (_hmrDownload = hmrDownload(asset)) === null || _hmrDownload === void 0 ? void 0 : _hmrDownload.catch((err)=>{
-                    // Web extension bugfix for Chromium
-                    // https://bugs.chromium.org/p/chromium/issues/detail?id=1255412#c12
-                    if (extCtx && extCtx.runtime && extCtx.runtime.getManifest().manifest_version == 3) {
-                        if (typeof ServiceWorkerGlobalScope != "undefined" && global instanceof ServiceWorkerGlobalScope) {
-                            extCtx.runtime.reload();
-                            return;
-                        }
-                        asset.url = extCtx.runtime.getURL("/__parcel_hmr_proxy__?url=" + encodeURIComponent(asset.url + "?t=" + Date.now()));
-                        return hmrDownload(asset);
+                    // Web extension fix
+                    if (extCtx && extCtx.runtime && extCtx.runtime.getManifest().manifest_version == 3 && typeof ServiceWorkerGlobalScope != "undefined" && global instanceof ServiceWorkerGlobalScope) {
+                        extCtx.runtime.reload();
+                        return;
                     }
                     throw err;
                 });
@@ -589,7 +590,7 @@ if (leafLet) {
 }
 const loginForm = document.querySelector(".form--login");
 const logOutBtn = document.querySelector(".nav__el--logout");
-const signUpBtn = document.querySelector(".nav__el--cta");
+const signUpBtn = document.querySelector(".form--signup");
 const updateForm = document.querySelector(".form-user-data");
 const userPasswordForm = document.querySelector(".form-user-password");
 const bookBtn = document.getElementById("book-tour");
@@ -598,6 +599,7 @@ document.querySelector(".form--login").addEventListener("submit", (e)=>{
     e.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    console.log("email = ", email, " password = ", password);
     (0, _login.login)(email, password);
 });
 if (logOutBtn) logOutBtn.addEventListener("click", (0, _login.logOut));
@@ -608,7 +610,7 @@ if (updateForm) updateForm.addEventListener("submit", (e)=>{
     form.append("name", document.getElementById("name").value);
     form.append("email", document.getElementById("email").value);
     form.append("photo", document.getElementById("photo").files[0]);
-    console.log(form);
+    // console.log(form);
     //passing form(FORM IS AN OBJECT WITH NAME,EMAIL,USERDATA)
     (0, _updateSettings.updateSettings)(form, "data");
 });
@@ -635,12 +637,13 @@ if (bookBtn) bookBtn.addEventListener("click", (e)=>{
     (0, _stripe.bookTour)(tourId);
 // e.target.textContent = 'Book Tour';
 });
-if (signUpBtn) document.querySelector(".nav__el--cta").addEventListener("submit", (e)=>{
+if (signUpBtn) document.querySelector(".form--signup").addEventListener("submit", (e)=>{
     e.preventDefault();
-    const name = documet.getElementById("name").value;
+    const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const passwordConfirm = document.getElementById("passwordConfirm").value;
+    console.log(name, email, password, passwordConfirm);
     (0, _signUp.signUp)(name, email, password, passwordConfirm);
 });
 
@@ -2035,7 +2038,7 @@ var defined = require("84e2102cc91d3ddd");
 var fails = require("a5e716b40d96272f");
 var spaces = require("eb8c5ae89a09ec39");
 var space = "[" + spaces + "]";
-var non = "​\x85";
+var non = "\u200B\x85";
 var ltrim = RegExp("^" + space + space + "*");
 var rtrim = RegExp(space + space + "*$");
 var exporter = function(KEY, exec, ALIAS) {
@@ -2059,7 +2062,7 @@ var trim = exporter.trim = function(string, TYPE) {
 module.exports = exporter;
 
 },{"3937f110b9ee2988":"1Tgvm","84e2102cc91d3ddd":"4Lj5U","a5e716b40d96272f":"iAFH1","eb8c5ae89a09ec39":"bg6tv"}],"bg6tv":[function(require,module,exports) {
-module.exports = "	\n\v\f\r \xa0 ᠎             　\u2028\u2029\uFEFF";
+module.exports = "	\n\v\f\r \xa0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF";
 
 },{}],"edHLy":[function(require,module,exports) {
 var $export = require("2437174737b70d58");
@@ -5386,7 +5389,7 @@ var $DataView = global[DATA_VIEW];
 var Math = global.Math;
 var RangeError = global.RangeError;
 // eslint-disable-next-line no-shadow-restricted-names
-var Infinity = global.Infinity;
+var Infinity1 = global.Infinity;
 var BaseBuffer = $ArrayBuffer;
 var abs = Math.abs;
 var pow = Math.pow;
@@ -7639,12 +7642,13 @@ const login = async (email, password)=>{
     try {
         const res = await (0, _axiosDefault.default)({
             method: "POST",
-            url: "http://127.0.0.1:8000/api/v1/users/signin",
+            url: "http://localhost:8000/api/v1/users/signin",
             data: {
                 email,
                 password
             }
         });
+        console.log("hello", res.data);
         if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "logged in successfully!");
             window.setTimeout(()=>{
@@ -7652,6 +7656,7 @@ const login = async (email, password)=>{
             }, 1000);
         }
     } catch (err) {
+        console.log(err);
         (0, _alerts.showAlert)("error", err.response.data.message);
     }
 };
@@ -7659,7 +7664,7 @@ const logOut = async (req, res)=>{
     try {
         const res = await (0, _axiosDefault.default)({
             method: "GET",
-            url: "http://127.0.0.1:8000/api/v1/users/logout"
+            url: "http://localhost:8000/api/v1/users/logout"
         });
         if (res.data.status === "success") location.reload(true);
     } catch (err) {
@@ -7685,13 +7690,14 @@ parcelHelpers.export(exports, "toFormData", ()=>toFormData);
 parcelHelpers.export(exports, "AxiosHeaders", ()=>AxiosHeaders);
 parcelHelpers.export(exports, "HttpStatusCode", ()=>HttpStatusCode);
 parcelHelpers.export(exports, "formToJSON", ()=>formToJSON);
+parcelHelpers.export(exports, "getAdapter", ()=>getAdapter);
 parcelHelpers.export(exports, "mergeConfig", ()=>mergeConfig);
 var _axiosJs = require("./lib/axios.js");
 var _axiosJsDefault = parcelHelpers.interopDefault(_axiosJs);
 // This module is intended to unwrap Axios default export as named.
 // Keep top-level export same with static properties
 // so that it can keep same with es module or cjs
-const { Axios, AxiosError, CanceledError, isCancel, CancelToken, VERSION, all, Cancel, isAxiosError, spread, toFormData, AxiosHeaders, HttpStatusCode, formToJSON, mergeConfig } = (0, _axiosJsDefault.default);
+const { Axios, AxiosError, CanceledError, isCancel, CancelToken, VERSION, all, Cancel, isAxiosError, spread, toFormData, AxiosHeaders, HttpStatusCode, formToJSON, getAdapter, mergeConfig } = (0, _axiosJsDefault.default);
 
 },{"./lib/axios.js":"63MyY","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"63MyY":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -7725,6 +7731,8 @@ var _isAxiosErrorJs = require("./helpers/isAxiosError.js");
 var _isAxiosErrorJsDefault = parcelHelpers.interopDefault(_isAxiosErrorJs);
 var _axiosHeadersJs = require("./core/AxiosHeaders.js");
 var _axiosHeadersJsDefault = parcelHelpers.interopDefault(_axiosHeadersJs);
+var _adaptersJs = require("./adapters/adapters.js");
+var _adaptersJsDefault = parcelHelpers.interopDefault(_adaptersJs);
 var _httpStatusCodeJs = require("./helpers/HttpStatusCode.js");
 var _httpStatusCodeJsDefault = parcelHelpers.interopDefault(_httpStatusCodeJs);
 "use strict";
@@ -7776,12 +7784,13 @@ axios.isAxiosError = (0, _isAxiosErrorJsDefault.default);
 axios.mergeConfig = (0, _mergeConfigJsDefault.default);
 axios.AxiosHeaders = (0, _axiosHeadersJsDefault.default);
 axios.formToJSON = (thing)=>(0, _formDataToJSONJsDefault.default)((0, _utilsJsDefault.default).isHTMLForm(thing) ? new FormData(thing) : thing);
+axios.getAdapter = (0, _adaptersJsDefault.default).getAdapter;
 axios.HttpStatusCode = (0, _httpStatusCodeJsDefault.default);
 axios.default = axios;
 // this module should only have a default export
 exports.default = axios;
 
-},{"./utils.js":"5By4s","./helpers/bind.js":"haRQb","./core/Axios.js":"cpqD8","./core/mergeConfig.js":"b85oP","./defaults/index.js":"hXfHM","./helpers/formDataToJSON.js":"01RfH","./cancel/CanceledError.js":"9PwCG","./cancel/CancelToken.js":"45wzn","./cancel/isCancel.js":"a0VmF","./env/data.js":"h29L9","./helpers/toFormData.js":"ajoez","./core/AxiosError.js":"3u8Tl","./helpers/spread.js":"dyQ8N","./helpers/isAxiosError.js":"eyiLq","./core/AxiosHeaders.js":"cgSSx","./helpers/HttpStatusCode.js":"fdR61","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5By4s":[function(require,module,exports) {
+},{"./utils.js":"5By4s","./helpers/bind.js":"haRQb","./core/Axios.js":"cpqD8","./core/mergeConfig.js":"b85oP","./defaults/index.js":"hXfHM","./helpers/formDataToJSON.js":"01RfH","./cancel/CanceledError.js":"9PwCG","./cancel/CancelToken.js":"45wzn","./cancel/isCancel.js":"a0VmF","./env/data.js":"h29L9","./helpers/toFormData.js":"ajoez","./core/AxiosError.js":"3u8Tl","./helpers/spread.js":"dyQ8N","./helpers/isAxiosError.js":"eyiLq","./core/AxiosHeaders.js":"cgSSx","./adapters/adapters.js":"d7JxI","./helpers/HttpStatusCode.js":"fdR61","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5By4s":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _bindJs = require("./helpers/bind.js");
@@ -8193,7 +8202,8 @@ const reduceDescriptors = (obj, reducer)=>{
     const descriptors = Object.getOwnPropertyDescriptors(obj);
     const reducedDescriptors = {};
     forEach(descriptors, (descriptor, name)=>{
-        if (reducer(descriptor, name, obj) !== false) reducedDescriptors[name] = descriptor;
+        let ret;
+        if ((ret = reducer(descriptor, name, obj)) !== false) reducedDescriptors[name] = ret || descriptor;
     });
     Object.defineProperties(obj, reducedDescriptors);
 };
@@ -8440,10 +8450,9 @@ const validators = (0, _validatorJsDefault.default).validators;
         }
         // Set config.method
         config.method = (config.method || this.defaults.method || "get").toLowerCase();
-        let contextHeaders;
         // Flatten headers
-        contextHeaders = headers && (0, _utilsJsDefault.default).merge(headers.common, headers[config.method]);
-        contextHeaders && (0, _utilsJsDefault.default).forEach([
+        let contextHeaders = headers && (0, _utilsJsDefault.default).merge(headers.common, headers[config.method]);
+        headers && (0, _utilsJsDefault.default).forEach([
             "delete",
             "get",
             "head",
@@ -10649,9 +10658,6 @@ var _indexJsDefault = parcelHelpers.interopDefault(_indexJs);
 var _formDataToJSONJs = require("../helpers/formDataToJSON.js");
 var _formDataToJSONJsDefault = parcelHelpers.interopDefault(_formDataToJSONJs);
 "use strict";
-const DEFAULT_CONTENT_TYPE = {
-    "Content-Type": undefined
-};
 /**
  * It takes a string, tries to parse it, and if it fails, it returns the stringified version
  * of the input
@@ -10747,23 +10753,20 @@ const defaults = {
     },
     headers: {
         common: {
-            "Accept": "application/json, text/plain, */*"
+            "Accept": "application/json, text/plain, */*",
+            "Content-Type": undefined
         }
     }
 };
 (0, _utilsJsDefault.default).forEach([
     "delete",
     "get",
-    "head"
-], function forEachMethodNoData(method) {
-    defaults.headers[method] = {};
-});
-(0, _utilsJsDefault.default).forEach([
+    "head",
     "post",
     "put",
     "patch"
-], function forEachMethodWithData(method) {
-    defaults.headers[method] = (0, _utilsJsDefault.default).merge(DEFAULT_CONTENT_TYPE);
+], (method)=>{
+    defaults.headers[method] = {};
 });
 exports.default = defaults;
 
@@ -11153,7 +11156,16 @@ AxiosHeaders.accessor([
     "User-Agent",
     "Authorization"
 ]);
-(0, _utilsJsDefault.default).freezeMethods(AxiosHeaders.prototype);
+// reserved names hotfix
+(0, _utilsJsDefault.default).reduceDescriptors(AxiosHeaders.prototype, ({ value }, key)=>{
+    let mapped = key[0].toUpperCase() + key.slice(1); // map `set` => `Set`
+    return {
+        get: ()=>value,
+        set (headerValue) {
+            this[mapped] = headerValue;
+        }
+    };
+});
 (0, _utilsJsDefault.default).freezeMethods(AxiosHeaders);
 exports.default = AxiosHeaders;
 
@@ -11281,6 +11293,8 @@ const knownAdapters = {
         });
     }
 });
+const renderReason = (reason)=>`- ${reason}`;
+const isResolvedHandle = (adapter)=>(0, _utilsJsDefault.default).isFunction(adapter) || adapter === null || adapter === false;
 exports.default = {
     getAdapter: (adapters)=>{
         adapters = (0, _utilsJsDefault.default).isArray(adapters) ? adapters : [
@@ -11289,15 +11303,23 @@ exports.default = {
         const { length } = adapters;
         let nameOrAdapter;
         let adapter;
+        const rejectedReasons = {};
         for(let i = 0; i < length; i++){
             nameOrAdapter = adapters[i];
-            if (adapter = (0, _utilsJsDefault.default).isString(nameOrAdapter) ? knownAdapters[nameOrAdapter.toLowerCase()] : nameOrAdapter) break;
+            let id;
+            adapter = nameOrAdapter;
+            if (!isResolvedHandle(nameOrAdapter)) {
+                adapter = knownAdapters[(id = String(nameOrAdapter)).toLowerCase()];
+                if (adapter === undefined) throw new (0, _axiosErrorJsDefault.default)(`Unknown adapter '${id}'`);
+            }
+            if (adapter) break;
+            rejectedReasons[id || "#" + i] = adapter;
         }
         if (!adapter) {
-            if (adapter === false) throw new (0, _axiosErrorJsDefault.default)(`Adapter ${nameOrAdapter} is not supported by the environment`, "ERR_NOT_SUPPORT");
-            throw new Error((0, _utilsJsDefault.default).hasOwnProp(knownAdapters, nameOrAdapter) ? `Adapter '${nameOrAdapter}' is not available in the build` : `Unknown adapter '${nameOrAdapter}'`);
+            const reasons = Object.entries(rejectedReasons).map(([id, state])=>`adapter ${id} ` + (state === false ? "is not supported by the environment" : "is not available in the build"));
+            let s = length ? reasons.length > 1 ? "since :\n" + reasons.map(renderReason).join("\n") : " " + renderReason(reasons[0]) : "as no adapter specified";
+            throw new (0, _axiosErrorJsDefault.default)(`There is no suitable adapter to dispatch the request ` + s, "ERR_NOT_SUPPORT");
         }
-        if (!(0, _utilsJsDefault.default).isFunction(adapter)) throw new TypeError("adapter is not a function");
         return adapter;
     },
     adapters: knownAdapters
@@ -11367,9 +11389,12 @@ exports.default = isXHRAdapterSupported && function(config) {
             if (config.cancelToken) config.cancelToken.unsubscribe(onCanceled);
             if (config.signal) config.signal.removeEventListener("abort", onCanceled);
         }
+        let contentType;
         if ((0, _utilsJsDefault.default).isFormData(requestData)) {
             if ((0, _indexJsDefault.default).isStandardBrowserEnv || (0, _indexJsDefault.default).isStandardBrowserWebWorkerEnv) requestHeaders.setContentType(false); // Let the browser set it
-            else requestHeaders.setContentType("multipart/form-data;", false); // mobile/desktop app frameworks
+            else if (!requestHeaders.getContentType(/^\s*multipart\/form-data/)) requestHeaders.setContentType("multipart/form-data"); // mobile/desktop app frameworks
+            else if ((0, _utilsJsDefault.default).isString(contentType = requestHeaders.getContentType())) // fix semicolon duplication issue for ReactNative FormData implementation
+            requestHeaders.setContentType(contentType.replace(/^\s*(multipart\/form-data);+/, "$1"));
         }
         let request = new XMLHttpRequest();
         // HTTP basic authentication
@@ -11838,7 +11863,7 @@ exports.default = {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "VERSION", ()=>VERSION);
-const VERSION = "1.4.0";
+const VERSION = "1.5.1";
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"45wzn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -12123,13 +12148,18 @@ var _axiosDefault = parcelHelpers.interopDefault(_axios);
 var _alerts = require("./alerts");
 const updateSettings = async (data, type)=>{
     try {
-        const url = type === "password" ? "http://127.0.0.1:8000/api/v1/users/updateMyPassword" : "http://127.0.0.1:8000/api/v1/users/updateMe";
+        const url = type === "password" ? "http://localhost:8000/api/v1/users/updateMyPassword" : "http://localhost:8000/api/v1/users/updateMe";
         const res = await (0, _axiosDefault.default)({
             method: "PATCH",
             url,
             data
         });
-        if (res.data.status === "success") (0, _alerts.showAlert)("success", ` ${type.toUpperCase()} updated successfully`);
+        if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", ` ${type.toUpperCase()} updated successfully`);
+            window.setTimeout(()=>{
+                location.reload(true);
+            }, 500);
+        }
     } catch (err) {
         (0, _alerts.showAlert)("error", err.response.data.message);
     }
@@ -12147,8 +12177,9 @@ const bookTour = async (tourId)=>{
         // 1) Get Checkout session
         const session = await (0, _axiosDefault.default)({
             method: "POST",
-            url: `http://127.0.0.1:8000/api/v1/bookings/checkout-session/${tourId}`
+            url: `http://localhost:8000/api/v1/bookings/checkout-session/${tourId}`
         });
+        console.log("see session");
         console.log(session);
         const redirectUrl = session.data.session.url;
         // 2) Redirect to checkout form
@@ -12170,7 +12201,7 @@ const signUp = async (name, email, password, passwordConfirm)=>{
     try {
         const res = await (0, _axiosDefault.default)({
             method: "POST",
-            url: "http://127.0.0.1:8000/api/v1/users/signup",
+            url: "http://localhost:8000/api/v1/users/signup",
             data: {
                 name,
                 email,
@@ -12189,6 +12220,6 @@ const signUp = async (name, email, password, passwordConfirm)=>{
     }
 };
 
-},{"axios":"jo6P5","./alerts":"6Mcnf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aC5kS","f2QDv"], "f2QDv", "parcelRequire11c7")
+},{"axios":"jo6P5","./alerts":"6Mcnf","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["dafvh","f2QDv"], "f2QDv", "parcelRequire11c7")
 
 //# sourceMappingURL=index.js.map

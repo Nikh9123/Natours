@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const { convert } = require('html-to-text');
-const transport = require('nodemailer-brevo-transport');
+// const transport = require('nodemailer-brevo-transport');
 const pug = require('pug');
 // const rese = require('rese');
 
@@ -13,21 +13,21 @@ module.exports = class Email {
   }
 
   newTransport() {
-
     if (process.env.NODE_ENV === 'production') {
-      console.log('hello5')
-      //sendInBlue
-      return nodemailer.createTransport({
-        host: process.env.SENDINBLUE_HOST,
-        port: process.env.SENDINBLUE_PORT,
-        auth:{
-          user:process.env.SENDINBLUE_USERNAME,
-          pass:process.env.SENDINBLUE_PASSWORD
-        }
-      })
+      //Real time email sending service from gmail
+      const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'satyamnikhil1523@gmail.com',
+          pass: 'qdvcvtmrgbnpkowm',
+        },
+      });
+      transporter.verify((err) => {
+        if (err) console.error(err);
+      });
+      return transporter;
     }
 
-    //Transporter 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
@@ -36,16 +36,15 @@ module.exports = class Email {
         pass: process.env.EMAIL_PASSWORD,
       },
     });
-
     transporter.verify((err) => {
       if (err) console.error(err);
-  });
-    return transporter ;
+    });
+    return transporter;
+    //send testing email from mailsac Transporter service
   }
 
   //* SENDS the actual mail
   async send(template, subject) {
-
     // 1) RENDER HTML based on a pug TEMPLATE
     const html = pug.renderFile(
       `${__dirname}/../views/emails/${template}.pug`,
@@ -55,8 +54,8 @@ module.exports = class Email {
         subject,
       }
     );
-    const text = convert(html,{
-      wordwrap:130
+    const text = convert(html, {
+      wordwrap: 130,
     });
     // 2) DEFINE email OPTIONS
     const mailOptions = {
@@ -68,14 +67,22 @@ module.exports = class Email {
     };
 
     // 3) CREATE TRANSPORT and SEND mail
-    await this.newTransport().sendMail(mailOptions);
+    try{
+      await this.newTransport().sendMail(mailOptions);
+    }
+    catch(err){
+      console.log(err)
+    }
   }
 
   async sendWelcome() {
     await this.send('welcome', 'Welcome to the Natours!');
   }
 
-  async sendPasswordReset(){
-    await this.send('passwordReset','Your password reset token(valid for only 10 mins)')
+  async sendPasswordReset() {
+    await this.send(
+      'passwordReset',
+      'Your password reset token(valid for only 10 mins)'
+    );
   }
 };

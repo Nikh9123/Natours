@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const cors = require('cors')
 
 const userRouter = require(`./routes/userRoutes`);
 const tourRouter = require('./routes/tourRoutes');
@@ -19,6 +20,10 @@ const globalErrorHandler = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 
 const app = express();
+
+app.use(cors());
+
+
 
 //& SETTING ENGINE and PATH TO SERVE WEBSITE PAGES
 app.set('view engine', 'pug');

@@ -5,7 +5,6 @@ import { displayMap } from './leaflet';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { signUp } from './signUp';
-
 //CHECKING DOM ELEMENTS
 const leafLet = document.getElementById('map');
 //DELEGATON
@@ -18,7 +17,7 @@ if (leafLet) {
 
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
-const signUpBtn = document.querySelector('.nav__el--cta');
+const signUpBtn = document.querySelector('.form--signup');
 const updateForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
@@ -29,7 +28,7 @@ if (loginForm) {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-
+    console.log("email = ",email ," password = ",password);
     login(email, password);
   });
 }
@@ -46,7 +45,7 @@ if (updateForm) {
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
 
-    console.log(form);
+    // console.log(form);
 
     //passing form(FORM IS AN OBJECT WITH NAME,EMAIL,USERDATA)
     updateSettings(form, 'data');
@@ -82,12 +81,13 @@ if (bookBtn)
 
 
 if (signUpBtn) {
-  document.querySelector('.nav__el--cta').addEventListener('submit', (e) => {
+  document.querySelector('.form--signup').addEventListener('submit', (e) => {
     e.preventDefault();
-    const name = documet.getElementById('name').value;
+    const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
+    console.log(name, email, password, passwordConfirm);
     signUp(name, email, password, passwordConfirm);
   });
 }

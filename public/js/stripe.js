@@ -9,8 +9,9 @@ export const bookTour = async (tourId) => {
     // 1) Get Checkout session
     const session = await axios({
       method: 'POST',
-      url: `http://127.0.0.1:8000/api/v1/bookings/checkout-session/${tourId}`,
+      url: `http://localhost:8000/api/v1/bookings/checkout-session/${tourId}`,
     });
+    console.log("see session");
     console.log(session);
     const redirectUrl = session.data.session.url ;
 
