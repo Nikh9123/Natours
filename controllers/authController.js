@@ -28,7 +28,7 @@ const createSendToken = (user, statusCode, res) => {
   //   cookieOptions.expires = new Date(Date.now() - 1); // Expire the cookie immediately
   // }
 
-  console.log("hello444", cookieOptions);
+  console.log('hello444', cookieOptions);
   res.cookie('jwt', token, cookieOptions);
   if (process.env.NODE_ENV === 'production') {
     cookieOptions.secure = true;
@@ -54,7 +54,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     role: req.body.role,
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
-  console.log(url)
+  console.log(url);
   await new Email(newUser, url).sendWelcome();
 
   createSendToken(newUser, 201, res);
@@ -62,6 +62,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
 exports.logIn = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
+  console.log(email, password);
 
   // 1) CHECK IF EMAIL AND PASSWORD EXISTS
   if (!email || !password) {
