@@ -635,9 +635,9 @@ if (bookBtn) bookBtn.addEventListener("click", (e)=>{
     (0, _stripe.bookTour)(tourId);
 // e.target.textContent = 'Book Tour';
 });
-if (signUpBtn) document.querySelector(".nav__el--cta").addEventListener("submit", (e)=>{
+if (signUpBtn) document.querySelector(".form--signup").addEventListener("submit", (e)=>{
     e.preventDefault();
-    const name = documet.getElementById("name").value;
+    const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const passwordConfirm = document.getElementById("passwordConfirm").value;
@@ -7639,7 +7639,7 @@ const login = async (email, password)=>{
     try {
         const res = await (0, _axiosDefault.default)({
             method: "POST",
-            url: "http://127.0.0.1:8000/api/v1/users/signin",
+            url: "http://localhost:3000/api/v1/users/signin",
             data: {
                 email,
                 password
@@ -7652,14 +7652,15 @@ const login = async (email, password)=>{
             }, 1000);
         }
     } catch (err) {
-        (0, _alerts.showAlert)("error", err.response.data.message);
+        console.log(err);
+    // showAlert('error', err.response.data.message);
     }
 };
 const logOut = async (req, res)=>{
     try {
         const res = await (0, _axiosDefault.default)({
             method: "GET",
-            url: "http://127.0.0.1:8000/api/v1/users/logout"
+            url: "http://localhost:3000/api/v1/users/logout"
         });
         if (res.data.status === "success") location.reload(true);
     } catch (err) {
@@ -12170,7 +12171,7 @@ const signUp = async (name, email, password, passwordConfirm)=>{
     try {
         const res = await (0, _axiosDefault.default)({
             method: "POST",
-            url: "http://127.0.0.1:8000/api/v1/users/signup",
+            url: "http://localhost:3000/api/v1/users/signup",
             data: {
                 name,
                 email,
@@ -12185,7 +12186,8 @@ const signUp = async (name, email, password, passwordConfirm)=>{
             }, 500);
         }
     } catch (err) {
-        (0, _alerts.showAlert)("err", err.response.data.message);
+        console.log(err);
+    // showAlert('err', err.response.data.message);
     }
 };
 

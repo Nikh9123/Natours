@@ -80,11 +80,10 @@ if (bookBtn)
     // e.target.textContent = 'Book Tour';
   });
 
-
 if (signUpBtn) {
-  document.querySelector('.nav__el--cta').addEventListener('submit', (e) => {
+  document.querySelector('.form--signup').addEventListener('submit', (e) => {
     e.preventDefault();
-    const name = documet.getElementById('name').value;
+    const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;

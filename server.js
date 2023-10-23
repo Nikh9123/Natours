@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION ❌❌❌. SHUTTING DOWN....');
-  console.log(err.name , err.message);
+  console.log(err.name, err.message);
   process.exit(1);
 });
 
@@ -21,7 +21,7 @@ const db = process.env.DATABASE.replace(
 mongoose
   .connect(db, {
     useCreateIndex: true,
-    useNewUrlParser: true, 
+    useNewUrlParser: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
@@ -29,7 +29,7 @@ mongoose
     console.log('Db connection successful !!!');
   });
 
-const port = process.env.port || 3000;
+const port = 3000;
 
 const server = app.listen(port, () => {
   console.log(`app running on port no ${port}...`);
@@ -37,7 +37,7 @@ const server = app.listen(port, () => {
 
 process.on('unhandledRejection', (err) => {
   console.log('UNHANDLED ERROR ❌❌❌. SHUTTING DOWN....');
-  console.log(err.name , err.message);
+  console.log(err.name, err.message);
   server.close(() => {
     process.exit(1);
   });
