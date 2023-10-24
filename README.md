@@ -8,7 +8,8 @@
 
 <br />
 <div align="center">
-  <h3 align="center">Natours API</h3>
+  
+  <h3 align="center">Natours API 🌏</h3>
 
   <p align="center">
     An awesome platofrm to plan your tours!
@@ -23,6 +24,8 @@
   </p>
 </div>
 <br />
+
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary><span>Table of Contents<span></summary>
