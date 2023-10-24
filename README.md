@@ -6,8 +6,6 @@
   <br>
 </h1>
 
-<h4 align="center">Natours: Explore iconic destinations effortlessly. Curated tours, seamless facilities, and unforgettable adventures await. Accessible via our user-friendly platform or integrate seamlessly using our API.</h4>
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary><span>Table of Contents<span></summary>
@@ -33,6 +31,9 @@
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
+
+<h4 align="center">Natours: Explore iconic destinations effortlessly. Curated tours, seamless facilities, and unforgettable adventures await. Accessible via our user-friendly platform or integrate seamlessly using our API.</h4>
+
 
 ### Built With
 
