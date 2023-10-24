@@ -31,7 +31,8 @@ This section should list any major frameworks/libraries used to bootstrap your p
 )
 ![validator](https://img.shields.io/badge/validator-grey?style=for-the-badge&logo=validator&logoColor=white
 )
-![jsonwebtoken](http://jwt.io/img/logo-asset.svg)
+![jsonwebtoken](<img src="http://jwt.io/img/logo-asset.svg" alt="JSON Web Token" width="50" height="20">
+)
 
 
 ## frontend 
