@@ -6,6 +6,23 @@
   <br>
 </h1>
 
+<br />
+<div align="center">
+  <h3 align="center">Natours API</h3>
+
+  <p align="center">
+    An awesome platofrm to plan your tours!
+    <br />
+    <a href="https://documenter.getpostman.com/view/26553162/2s9YRCXrKV"><strong>Explore the API »</strong></a>
+    <br />
+    <br />
+    <a href="">View Demo</a>
+    ·
+    <a href="https://github.com/Nikh9123/Natours/issues">Report Bug</a>
+    ·
+  </p>
+</div>
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary><span>Table of Contents<span></summary>
