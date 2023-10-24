@@ -31,8 +31,8 @@ This section should list any major frameworks/libraries used to bootstrap your p
 )
 ![validator](https://img.shields.io/badge/validator-grey?style=for-the-badge&logo=validator&logoColor=white
 )
-![jsonwebtoken](<img src="http://jwt.io/img/logo-asset.svg" alt="JSON Web Token" width="50" height="20">
-)
+![jsonwebtoken](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+
 
 
 ## frontend 
@@ -44,6 +44,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 ## Tools
 
 ![git](https://img.shields.io/badge/-Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![Visual Studio](https://img.shields.io/badge/Visual%20Studio-5C2D91.svg?style=for-the-badge&logo=visual-studio&logoColor=white)
+![Visual Studio](https://img.shields.io/badge/visualstudio-black?style=for-the-badge&logo=visual%20studio&logoColor=blue
+)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
