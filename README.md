@@ -7,4 +7,4 @@
 </h1>
 
 
-<h4 align="center">Natours: Explore iconic destinations effortlessly. Curated tours, seamless facilities, and unforgettable adventures await. Your global travel dreams, our expertise</h4>
+<h4 align="center">Natours: Explore iconic destinations effortlessly. Curated tours, seamless facilities, and unforgettable adventures await. Accessible via our user-friendly platform or integrate seamlessly using our API.</h4>
