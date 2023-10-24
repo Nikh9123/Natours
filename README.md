@@ -16,7 +16,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 ![NodeJS](https://img.shields.io/badge/node.js-%2343853D.svg?style=for-the-badge&logo=node-dot-js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![Mongoose.js](https://img.shields.io/badge/mongoose.js-brown?style=One%20of%20%3A%20for-the-badge&logo=mongoose&logoColor=brown&labelColor=white)
+![Mongoose.js](https://img.shields.io/badge/mongoose.js-brown?style=for-the-badge&logo=mongoose&logoColor=brown&labelColor=white)
 ![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
 
 ## Dependencies/Libraries Used
