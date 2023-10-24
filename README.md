@@ -10,7 +10,7 @@
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+This section showcases the foundational elements of my project. Here, you'll find a brief overview of the key frameworks and libraries that were instrumental in bringing this project to life.
 
 ## backend
 
@@ -32,7 +32,6 @@ This section should list any major frameworks/libraries used to bootstrap your p
 ![validator](https://img.shields.io/badge/validator-grey?style=for-the-badge&logo=validator&logoColor=white
 )
 ![jsonwebtoken](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
-
 
 
 ## frontend 
