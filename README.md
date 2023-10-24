@@ -19,10 +19,19 @@ This section should list any major frameworks/libraries used to bootstrap your p
 ![Mongoose.js](https://img.shields.io/badge/mongoose.js-brown?style=for-the-badge&logo=mongoose&logoColor=brown&labelColor=white)
 ![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
 
-## Dependencies/Libraries Used
-![GMAIL](https://img.shields.io/badge/gmail-brown?style=One%20of%20%3A%20for-the-badge&logo=gmail&labelColor=white)
-![Stripe](https://img.shields.io/badge/stripe-green?style=One%20of%20%3A%20for-the-badge&logo=stripe&labelColor=white
+## Services/Libraries Used
+![GMAIL](https://img.shields.io/badge/gmail-brown?style=for-the-badge&logo=gmail&labelColor=white)
+![Stripe](https://img.shields.io/badge/stripe-green?style=for-the-badge&logo=stripe&labelColor=white
 )
+![Nodemailer](https://img.shields.io/badge/nodemailer-blue?style=for-the-badge
+)
+![Nodemon](https://img.shields.io/badge/nodemon-green?style=for-the-badge&logo=nodemon&logoColor=white
+)
+![Pug](https://img.shields.io/badge/pug-brown?style=for-the-badge&logo=pug&logoColor=white
+)
+![validator](https://img.shields.io/badge/validator-grey?style=for-the-badge&logo=validator&logoColor=white
+)
+![jsonwebtoken](http://jwt.io/img/logo-asset.svg)
 
 
 ## frontend 
