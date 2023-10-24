@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/Nikh9123/Natours"><img src="D:\Natours\public\img\logo-green-round.png" alt="Natours" width="200"></a>
+  <a href="https://github.com/Nikh9123/Natours"><img src="https://natours.netlify.app/img/logo-green-2x.png" alt="Natours" width="200"></a>
   <br>
   Natours
   <br>
