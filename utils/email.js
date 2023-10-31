@@ -18,9 +18,10 @@ module.exports = class Email {
       const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-          user: 'satyamnikhil1523@gmail.com',
-          pass: 'qdvcvtmrgbnpkowm',
+          user: process.env.GMAIL_USERNAME,
+          pass: process.env.GMAIL_PASSWORD,
         },
+  
       });
       transporter.verify((err) => {
         if (err) console.error(err);
